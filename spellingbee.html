@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spelling Bee | ODA ICT Club</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --accent: #7c3aed;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --correct: #4CAF50;
+            --incorrect: #F44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background-attachment: fixed;
+            color: var(--light);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-top: 140px;
+        }
+        
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 25% 25%, var(--glass) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem;
+            width: 100%;
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+        
+        header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulse 15s infinite linear;
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tagline {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Navigation Styles */
+        .top-nav {
+            display: flex;
+            align-items: center;
+        }
+        
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin-left: 2rem;
+        }
+        
+        .nav-menu li {
+            position: relative;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .nav-menu a i {
+            font-size: 1rem;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            width: 100%;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Game Container */
+        .game-container {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            margin-bottom: 2rem;
+        }
+        
+        .game-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        /* Form Elements */
+        label {
+            display: block;
+            margin: 1rem 0 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+        }
+        
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-correct {
+            background: var(--correct);
+        }
+        
+        .btn-incorrect {
+            background: var(--incorrect);
+        }
+        
+        /* Game Elements */
+        .progress-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .streak-counter {
+            color: var(--secondary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .word-hints {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+        
+        .word-hints p {
+            margin: 0.5rem 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Results Section */
+        .result-section {
+            display: none;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+        
+        .result-message {
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--secondary);
+        }
+        
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .stat-box {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Footer Styles */
+        footer {
+            background: linear-gradient(135deg, var(--dark), #0f172a);
+            color: white;
+            padding: 2rem 1rem;
+            width: 100%;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+        
+        .social-links a {
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: confetti-fall 5s linear forwards;
+            z-index: 1000;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 0.9rem;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                flex-direction: column;
+                background: linear-gradient(135deg, var(--primary-dark), var(--dark));
+                width: 300px;
+                height: calc(100vh - 80px);
+                padding: 2rem;
+                transition: all 0.5s ease;
+                z-index: 100;
+                border-left: 1px solid var(--glass-border);
+                box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+            
+            .nav-menu a {
+                padding: 1rem;
+                justify-content: flex-start;
+            }
+            
+            .hamburger {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .top-nav {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .nav-menu {
+                top: 180px;
+                height: calc(100vh - 180px);
+            }
+            
+            body {
+                padding-top: 180px;
+            }
+            
+            .game-container {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <!-- Header with Navigation -->
+    <header>
+        <div class="header-container">
+            <div class="header-content">
+                <h1>Spelling Bee Challenge</h1>
+                <p class="tagline">OROMIA DEVELOPMENT ASSOCIATION special boarding school - Bishoftu branch - ICT Club</p>
+                <p class="tagline" style="font-size: 0.9rem; margin-top: 0.5rem;">Test your spelling skills with our interactive spelling bee game. Improve your vocabulary while having fun!</p>
+            </div>
+            
+            <nav class="top-nav">
+                <button class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="intro.html"><i class="fas fa-info-circle"></i> Introduction</a></li>
+                    <li><a href="textbooks.html"><i class="fas fa-book"></i> Textbooks</a></li>
+                    <li><a href="aboutus.html"><i class="fas fa-users"></i> About Us</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="game-container floating">
+            <h2 class="section-title">Spelling Bee Pro</h2>
+            
+            <!-- Start Section -->
+            <div id="start-section">
+                <label for="name">Enter Your Name:</label>
+                <input type="text" id="name" placeholder="Your name" required>
+                
+                <label for="difficulty">Select Difficulty:</label>
+                <select id="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                
+                <label for="category">Select Category:</label>
+                <select id="category">
+                    <option value="general">General</option>
+                    <option value="academic">Academic</option>
+                    <option value="business">Business</option>
+                    <option value="technology">Technology</option>
+                </select>
+                
+                <div style="margin: 1rem 0;">
+                    <input type="checkbox" id="timed-mode">
+                    <label for="timed-mode" style="display: inline;">Timed Mode (10 seconds per word)</label>
+                </div>
+                
+                <button class="btn" onclick="startTest()">
+                    <i class="fas fa-play"></i> Start Test
+                </button>
+                <button class="btn btn-secondary" onclick="toggleSettings()">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                
+                <div class="settings-panel" id="settings-panel" style="display: none; margin-top: 1rem;">
+                    <div style="margin: 0.5rem 0;">
+                        <input type="checkbox" id="dark-mode">
+                        <label for="dark-mode" style="display: inline;">Dark Mode</label>
+                    </div>
+                    <div style="margin: 0.5rem 0;">
+                        <input type="checkbox" id="sound-effects" checked>
+                        <label for="sound-effects" style="display: inline;">Sound Effects</label>
+                    </div>
+                    <div style="margin: 0.5rem 0;">
+                        <input type="checkbox" id="show-hints" checked>
+                        <label for="show-hints" style="display: inline;">Show Hints</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Test Section -->
+            <div id="test-section" style="display: none;">
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                
+                <div class="game-info">
+                    <div>Question <span id="question-number">1</span>/30</div>
+                    <div id="timer"></div>
+                    <div class="streak-counter" id="streak-counter"></div>
+                </div>
+                
+                <div class="word-hints">
+                    <p id="definition"></p>
+                    <p id="hint"></p>
+                    <p id="synonym"></p>
+                    <p id="example"></p>
+                </div>
+                
+                <input type="text" id="user-answer" placeholder="Spell the word" required autocomplete="off">
+                
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button class="btn" onclick="checkAnswer()">
+                        <i class="fas fa-check"></i> Submit
+                    </button>
+                    <button class="btn btn-secondary" onclick="skipQuestion()">
+                        <i class="fas fa-forward"></i> Skip (-1 point)
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div id="result" class="result-section">
+                <h3 class="section-title">Test Results</h3>
+                <p class="result-message" id="result-message"></p>
+                
+                <div class="result-stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="score">0</div>
+                        <div class="stat-label">Score</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="final-streak">0</div>
+                        <div class="stat-label">Max Streak</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="correct-rate">0</div>
+                        <div class="stat-label">Correct %</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                    <button class="btn" onclick="nextTest()">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                    <button class="btn btn-secondary" onclick="saveHighScore()">
+                        <i class="fas fa-trophy"></i> Save Score
+                    </button>
+                    <button class="btn btn-secondary" onclick="seeAnswers()">
+                        <i class="fas fa-list"></i> Review
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul style="list-style: none;">
+                    <li><a href="intro.html" style="color: white; text-decoration: none; display: block; padding: 0.5rem 0; transition: all 0.3s ease;"><i class="fas fa-chevron-right"></i> Introduction</a></li>
+                    <li><a href="aboutus.html" style="color: white; text-decoration: none; display: block; padding: 0.5rem 0; transition: all 0.3s ease;"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="textbooks.html" style="color: white; text-decoration: none; display: block; padding: 0.5rem 0; transition: all 0.3s ease;"><i class="fas fa-chevron-right"></i> Textbooks</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Our Projects</h3>
+                <ul style="list-style: none;">
+                    <li><a href="smart.html" style="color: white; text-decoration: none; display: block; padding: 0.5rem 0; transition: all 0.3s ease;"><i class="fas fa-chevron-right"></i> Smart Deep Study</a></li>
+                    <li><a href="flcard.html" style="color: white; text-decoration: none; display: block; padding: 0.5rem 0; transition: all 0.3s ease;"><i class="fas fa-chevron-right"></i> Study Flashcards</a></li>
+                    <li><a href="grading.html" style="color: white; text-decoration: none; display: block; padding: 0.5rem 0; transition: all 0.3s ease;"><i class="fas fa-chevron-right"></i> Grading System</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-envelope"></i> feyisayoseph@gmail.com</p>
+                <p><i class="fab fa-telegram"></i> @itcluboda</p>
+                <p><i class="fas fa-map-marker-alt"></i> Bishoftu, Ethiopia</p>
+                <div class="social-links">
+                    <a href="mailto:feyisayoseph@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+                    <a href="https://t.me/Godiskey1" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+                    <a href="https://github.com/jos-key/" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://t.me/itcluboda" target="_blank" title="Group Channel"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>© 2025 ODA ICT Club. All rights reserved | Designed by ICT Club Members</p>
+            <div style="margin-top: 1rem;">
+                <a href="https://policies.google.com/privacy?hl=en-ET&fg=1" style="color: white; text-decoration: none; margin: 0 0.5rem; font-size: 0.8rem;">Privacy Policy</a>
+                <a href="https://policies.google.com/terms?hl=en-ET&fg=1" style="color: white; text-decoration: none; margin: 0 0.5rem; font-size: 0.8rem;">Terms of Service</a>
+                <a href="contact.html" style="color: white; text-decoration: none; margin: 0 0.5rem; font-size: 0.8rem;">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+               
+    <script>
+        // Enhanced word database with categories
+        const wordDatabase = {
+            general: {
+  easy: [
+    { word: 'Abandon', definition: 'To leave behind or give up on', synonym: 'Forsake', hint: 'A', example: 'They had to forsake the sinking ship.' },
+    { word: 'Begin', definition: 'To start something', synonym: 'Commence', hint: 'B', example: 'Let us commence the ceremony at noon.' },
+    { word: 'Calm', definition: 'Peaceful and quiet', synonym: 'Serene', hint: 'C', example: 'The lake looked serene at dawn.' },
+    { word: 'Doubt', definition: 'To feel uncertain', synonym: 'Skepticism', hint: 'D', example: 'His skepticism about the plan was obvious.' },
+    { word: 'Eager', definition: 'Enthusiastically wanting to do something', synonym: 'Keen', hint: 'E', example: 'She was keen to start her new job.' },
+    { word: 'Fame', definition: 'State of being widely known', synonym: 'Renown', hint: 'F', example: 'The scientist gained renown for her discovery.' },
+    { word: 'Gift', definition: 'Natural ability or talent', synonym: 'Aptitude', hint: 'G', example: 'He showed an aptitude for music early on.' },
+    { word: 'Happy', definition: 'Feeling pleasure', synonym: 'Joyful', hint: 'H', example: 'The children looked joyful on Christmas morning.' },
+    { word: 'Idea', definition: 'A thought or suggestion', synonym: 'Concept', hint: 'I', example: 'The concept of time travel fascinates many.' },
+    { word: 'Jump', definition: 'Push oneself off the ground', synonym: 'Leap', hint: 'J', example: 'The athlete prepared to leap over the hurdle.' },
+    { word: 'Kind', definition: 'Generous and considerate', synonym: 'Benevolent', hint: 'K', example: 'Her benevolent nature made her beloved.' },
+    { word: 'Love', definition: 'Deep affection', synonym: 'Adoration', hint: 'L', example: 'Their adoration for each other was evident.' },
+    { word: 'Mood', definition: 'Temporary state of mind', synonym: 'Temper', hint: 'M', example: 'His cheerful temper brightened the room.' },
+    { word: 'Near', definition: 'Close in distance', synonym: 'Adjacent', hint: 'N', example: 'The adjacent building was just feet away.' },
+    { word: 'Open', definition: 'Not closed or blocked', synonym: 'Accessible', hint: 'O', example: 'The museum was accessible to all visitors.' },
+    { word: 'Play', definition: 'Engage in activity for enjoyment', synonym: 'Frolic', hint: 'P', example: 'Puppies often frolic in the park.' },
+    { word: 'Quiet', definition: 'Making little or no noise', synonym: 'Hushed', hint: 'Q', example: 'The library was hushed during exams.' },
+    { word: 'Rare', definition: 'Not occurring often', synonym: 'Uncommon', hint: 'R', example: 'Such talent is uncommon in young artists.' },
+    { word: 'Sad', definition: 'Feeling sorrow', synonym: 'Melancholy', hint: 'S', example: 'The melody had a melancholy tone.' },
+    { word: 'True', definition: 'In accordance with fact', synonym: 'Accurate', hint: 'T', example: 'His account proved to be accurate.' },
+    { word: 'Use', definition: 'Employ for a purpose', synonym: 'Utilize', hint: 'U', example: 'We should utilize all available resources.' },
+    { word: 'Vast', definition: 'Very great extent', synonym: 'Immense', hint: 'V', example: 'The desert stretched immense before them.' },
+    { word: 'Wet', definition: 'Covered with liquid', synonym: 'Damp', hint: 'W', example: 'The grass was still damp from the rain.' },
+    { word: 'Exit', definition: 'Way out of a place', synonym: 'Egress', hint: 'E', example: 'Please locate the egress before the show.' },
+    { word: 'Year', definition: 'Period of 365 days', synonym: 'Annually', hint: 'Y', example: 'The festival occurs annually in July.' },
+    { word: 'Zoom', definition: 'Move rapidly', synonym: 'Whiz', hint: 'Z', example: 'Cars would whiz by on the highway.' },
+    { word: 'Boat', definition: 'Small vessel for water travel', synonym: 'Craft', hint: 'B', example: 'The fishing craft bobbed in the harbor.' },
+    { word: 'Cold', definition: 'Low temperature', synonym: 'Chilly', hint: 'C', example: 'The morning air felt unusually chilly.' },
+    { word: 'Dusk', definition: 'Dark part of twilight', synonym: 'Nightfall', hint: 'D', example: 'Bats emerge at nightfall to hunt.' },
+    { word: 'Echo', definition: 'Repetition of sound', synonym: 'Reverberation', hint: 'E', example: 'The reverberation faded in the canyon.' }
+  ],
+  medium: [
+    { word: 'Abundant', definition: 'Existing in large quantities', synonym: 'Plentiful', hint: 'A', example: 'The harvest was plentiful this year.' },
+    { word: 'Benevolent', definition: 'Well-meaning and kindly', synonym: 'Charitable', hint: 'B', example: 'The charitable organization helped many.' },
+    { word: 'Consequence', definition: 'Result or effect of an action', synonym: 'Ramification', hint: 'C', example: 'The ramification of the law was unexpected.' },
+    { word: 'Diligent', definition: 'Showing care in one\'s work', synonym: 'Assiduous', hint: 'D', example: 'Her assiduous efforts led to success.' },
+    { word: 'Eloquent', definition: 'Fluent and persuasive speaking', synonym: 'Articulate', hint: 'E', example: 'The articulate speaker captivated the audience.' },
+    { word: 'Fervent', definition: 'Displaying passionate intensity', synonym: 'Ardent', hint: 'F', example: 'He was an ardent supporter of the cause.' },
+    { word: 'Gregarious', definition: 'Fond of company', synonym: 'Sociable', hint: 'G', example: 'The sociable puppy loved meeting people.' },
+    { word: 'Hypocrisy', definition: 'Pretending to have moral standards', synonym: 'Duplicity', hint: 'H', example: 'His duplicity became evident over time.' },
+    { word: 'Impeccable', definition: 'Flawless', synonym: 'Faultless', hint: 'I', example: 'Her faultless performance earned praise.' },
+    { word: 'Juxtapose', definition: 'Place close together for contrast', synonym: 'Appose', hint: 'J', example: 'The exhibit will appose modern and classical art.' },
+    { word: 'Knell', definition: 'Sound of a bell for death', synonym: 'Toll', hint: 'K', example: 'The church bell began to toll solemnly.' },
+    { word: 'Languid', definition: 'Slow and relaxed', synonym: 'Listless', hint: 'L', example: 'The heat made everyone feel listless.' },
+    { word: 'Malleable', definition: 'Easily shaped', synonym: 'Pliable', hint: 'M', example: 'The pliable clay formed easily.' },
+    { word: 'Nebulous', definition: 'Unclear or vague', synonym: 'Hazy', hint: 'N', example: 'The instructions remained hazy to most.' },
+    { word: 'Obfuscate', definition: 'Deliberately make unclear', synonym: 'Bewilder', hint: 'O', example: 'Complex jargon can bewilder readers.' },
+    { word: 'Pragmatic', definition: 'Dealing with things sensibly', synonym: 'Practical', hint: 'P', example: 'Her practical approach solved the issue.' },
+    { word: 'Querulous', definition: 'Complaining in a whining manner', synonym: 'Peevish', hint: 'Q', example: 'The peevish child tired his parents.' },
+    { word: 'Recalcitrant', definition: 'Stubbornly uncooperative', synonym: 'Intractable', hint: 'R', example: 'The intractable mule refused to move.' },
+    { word: 'Sycophant', definition: 'Person who flatters for advantage', synonym: 'Toady', hint: 'S', example: 'The office toady always complimented the boss.' },
+    { word: 'Trepidation', definition: 'Feeling of fear about the future', synonym: 'Apprehension', hint: 'T', example: 'She felt apprehension before the test.' },
+    { word: 'Ubiquitous', definition: 'Present everywhere', synonym: 'Omnipresent', hint: 'U', example: 'Smartphones seem omnipresent today.' },
+    { word: 'Vacillate', definition: 'Alternate between opinions', synonym: 'Waver', hint: 'V', example: 'He continued to waver on his decision.' },
+    { word: 'Wanton', definition: 'Deliberate and unprovoked', synonym: 'Unjustified', hint: 'W', example: 'The unjustified cruelty shocked witnesses.' },
+    { word: 'Xenial', definition: 'Relating to hospitality', synonym: 'Hospitable', hint: 'X', example: 'The hospitable family welcomed guests.' },
+    { word: 'Yield', definition: 'Produce or provide', synonym: 'Generate', hint: 'Y', example: 'The investment will generate returns.' },
+    { word: 'Zealous', definition: 'Having great energy', synonym: 'Fervid', hint: 'Z', example: 'The fervid activist campaigned tirelessly.' },
+    { word: 'Banal', definition: 'Lacking originality', synonym: 'Trite', hint: 'B', example: 'His trite remarks bored the audience.' },
+    { word: 'Cajole', definition: 'Persuade with flattery', synonym: 'Wheedle', hint: 'C', example: 'She tried to wheedle a later curfew.' },
+    { word: 'Dearth', definition: 'Lack of something', synonym: 'Scarcity', hint: 'D', example: 'A scarcity of volunteers slowed progress.' },
+    { word: 'Enervate', definition: 'Cause to feel drained', synonym: 'Weaken', hint: 'E', example: 'The heat began to weaken the hikers.' }
+  ],
+  hard: [
+    { word: 'Abstruse', definition: 'Difficult to understand', synonym: 'Recondite', hint: 'A', example: 'The professor\'s recondite theories confused students.' },
+    { word: 'Bombastic', definition: 'High-sounding but meaningless', synonym: 'Grandiloquent', hint: 'B', example: 'The grandiloquent speech impressed few.' },
+    { word: 'Callipygian', definition: 'Having well-shaped buttocks', synonym: 'Shapely', hint: 'C', example: 'The sculpture featured shapely proportions.' },
+    { word: 'Defenestration', definition: 'Throwing someone out a window', synonym: 'Ejection', hint: 'D', example: 'The historical ejection sparked a war.' },
+    { word: 'Eschatology', definition: 'Study of the end times', synonym: 'Teleology', hint: 'E', example: 'Theology students debated teleology.' },
+    { word: 'Fractious', definition: 'Irritable and quarrelsome', synonym: 'Peevish', hint: 'F', example: 'The peevish toddler refused to nap.' },
+    { word: 'Gambol', definition: 'Run or jump playfully', synonym: 'Frolic', hint: 'G', example: 'Lambs would frolic in the meadow.' },
+    { word: 'Hegemony', definition: 'Dominance over others', synonym: 'Supremacy', hint: 'H', example: 'The cultural supremacy went unchallenged.' },
+    { word: 'Inchoate', definition: 'Just begun and not fully formed', synonym: 'Nascent', hint: 'I', example: 'The nascent movement showed promise.' },
+    { word: 'Juggernaut', definition: 'Irresistible force', synonym: 'Behemoth', hint: 'J', example: 'The corporate behemoth dominated markets.' },
+    { word: 'Kakistocracy', definition: 'Government by the least qualified', synonym: 'Misrule', hint: 'K', example: 'The period of misrule damaged institutions.' },
+    { word: 'Lugubrious', definition: 'Looking or sounding sad', synonym: 'Mournful', hint: 'L', example: 'The mournful song brought tears.' },
+    { word: 'Mellifluous', definition: 'Sweet or musical sounding', synonym: 'Dulcet', hint: 'M', example: 'Her dulcet voice soothed listeners.' },
+    { word: 'Nadir', definition: 'Lowest point', synonym: 'Bottom', hint: 'N', example: 'His career reached its bottom that year.' },
+    { word: 'Obfuscate', definition: 'Render obscure or unclear', synonym: 'Bemuse', hint: 'O', example: 'Technical jargon can bemuse laypeople.' },
+    { word: 'Pulchritude', definition: 'Physical beauty', synonym: 'Comeliness', hint: 'P', example: 'Her comeliness turned many heads.' },
+    { word: 'Quixotic', definition: 'Extremely idealistic', synonym: 'Visionary', hint: 'Q', example: 'His visionary schemes never materialized.' },
+    { word: 'Recumbent', definition: 'Lying down', synonym: 'Prostrate', hint: 'R', example: 'The prostrate figure didn\'t move.' },
+    { word: 'Sesquipedalian', definition: 'Using long words', synonym: 'Grandiloquent', hint: 'S', example: 'The grandiloquent lecturer lost his audience.' },
+    { word: 'Tintinnabulation', definition: 'Ringing of bells', synonym: 'Peal', hint: 'T', example: 'The peal echoed through the valley.' },
+    { word: 'Umbrage', definition: 'Offense or annoyance', synonym: 'Pique', hint: 'U', example: 'She took pique at the thoughtless remark.' },
+    { word: 'Vituperate', definition: 'Blame or insult', synonym: 'Revile', hint: 'V', example: 'Critics began to revile the policy.' },
+    { word: 'Wunderkind', definition: 'Child prodigy', synonym: 'Prodigy', hint: 'W', example: 'The musical prodigy composed at five.' },
+    { word: 'Xeric', definition: 'Adapted to dry environments', synonym: 'Arid', hint: 'X', example: 'Cacti thrive in arid conditions.' },
+    { word: 'Ylem', definition: 'Primordial matter in cosmology', synonym: 'Primaeval', hint: 'Y', example: 'Scientists theorize about primaeval particles.' },
+    { word: 'Zugzwang', definition: 'Chess position requiring disadvantageous move', synonym: 'Impasse', hint: 'Z', example: 'The player faced an unwinnable impasse.' },
+    { word: 'Apoplectic', definition: 'Overcome with anger', synonym: 'Furious', hint: 'A', example: 'The furious manager nearly collapsed.' },
+    { word: 'Brobdingnagian', definition: 'Gigantic', synonym: 'Colossal', hint: 'B', example: 'The colossal statue dwarfed visitors.' },
+    { word: 'Crepuscular', definition: 'Active at twilight', synonym: 'Nocturnal', hint: 'C', example: 'These nocturnal animals emerge at dusk.' },
+    { word: 'Demesne', definition: 'Domain or territory', synonym: 'Province', hint: 'D', example: 'The forest was the wolf\'s province.' }
+  ]
+},
+            academic: {
+  easy: [
+    { word: 'Analyze', definition: 'Examine in detail', synonym: 'Scrutinize', hint: 'A', example: 'Researchers must scrutinize the data carefully.' },
+    { word: 'Cite', definition: 'Quote as evidence', synonym: 'Reference', hint: 'C', example: 'Always reference your sources properly.' },
+    { word: 'Data', definition: 'Facts and statistics', synonym: 'Information', hint: 'D', example: 'The information supports our hypothesis.' },
+    { word: 'Evidence', definition: 'Proof supporting a claim', synonym: 'Verification', hint: 'E', example: 'The verification was peer-reviewed.' },
+    { word: 'Factor', definition: 'Element contributing to a result', synonym: 'Component', hint: 'F', example: 'Time was a key component in the reaction.' },
+    { word: 'Graph', definition: 'Visual representation of data', synonym: 'Chart', hint: 'G', example: 'The chart illustrates population growth.' },
+    { word: 'Hypothesis', definition: 'Testable explanation', synonym: 'Proposition', hint: 'H', example: 'The proposition was later disproven.' },
+    { word: 'Issue', definition: 'Important topic for debate', synonym: 'Matter', hint: 'I', example: 'This matter requires further study.' },
+    { word: 'Journal', definition: 'Scholarly periodical', synonym: 'Publication', hint: 'J', example: 'The publication features peer-reviewed articles.' },
+    { word: 'Knowledge', definition: 'Understanding of a subject', synonym: 'Expertise', hint: 'K', example: 'His expertise in physics is impressive.' },
+    { word: 'Logic', definition: 'Systematic reasoning', synonym: 'Rationale', hint: 'L', example: 'The rationale behind the theory is sound.' },
+    { word: 'Method', definition: 'Systematic procedure', synonym: 'Technique', hint: 'M', example: 'This technique reduces experimental error.' },
+    { word: 'Note', definition: 'Record briefly', synonym: 'Annotate', hint: 'N', example: 'Students should annotate key passages.' },
+    { word: 'Opinion', definition: 'Personal view', synonym: 'Viewpoint', hint: 'O', example: 'The paper acknowledges alternative viewpoints.' },
+    { word: 'Prior', definition: 'Existing before', synonym: 'Preceding', hint: 'P', example: 'The preceding study had limitations.' },
+    { word: 'Quote', definition: 'Repeat exact words', synonym: 'Reproduce', hint: 'Q', example: 'Reproduce the author’s words accurately.' },
+    { word: 'Revise', definition: 'Re-examine and alter', synonym: 'Amend', hint: 'R', example: 'Amend your draft before submission.' },
+    { word: 'Source', definition: 'Origin of information', synonym: 'Origin', hint: 'S', example: 'The origin of the data is credible.' },
+    { word: 'Theory', definition: 'System of ideas explaining phenomena', synonym: 'Framework', hint: 'T', example: 'The framework revolutionized biology.' },
+    { word: 'Understand', definition: 'Grasp the meaning', synonym: 'Comprehend', hint: 'U', example: 'Readers must comprehend the methodology.' },
+    { word: 'Valid', definition: 'Logically sound', synonym: 'Defensible', hint: 'V', example: 'The conclusions are defensible.' },
+    { word: 'Write', definition: 'Mark down words', synonym: 'Compose', hint: 'W', example: 'Compose your response clearly.' },
+    { word: 'Axis', definition: 'Reference line in a graph', synonym: 'Baseline', hint: 'A', example: 'Label the baseline with units.' },
+    { word: 'Bias', definition: 'Prejudice in favor of something', synonym: 'Partiality', hint: 'B', example: 'The study controlled for partiality.' },
+    { word: 'Cycle', definition: 'Recurrent series of events', synonym: 'Sequence', hint: 'C', example: 'The sequence repeats every 28 days.' },
+    { word: 'Draft', definition: 'Preliminary version', synonym: 'Outline', hint: 'D', example: 'Submit your outline by Friday.' },
+    { word: 'Edit', definition: 'Prepare for publication', synonym: 'Redact', hint: 'E', example: 'Redact sensitive information first.' },
+    { word: 'Focus', definition: 'Center of interest', synonym: 'Emphasis', hint: 'F', example: 'The emphasis was on qualitative data.' },
+    { word: 'Grade', definition: 'Level of quality', synonym: 'Rank', hint: 'G', example: 'The samples were sorted by rank.' },
+    { word: 'Index', definition: 'Alphabetical list of topics', synonym: 'Register', hint: 'I', example: 'Check the register for page numbers.' }
+  ],
+  medium: [
+    { word: 'Abstract', definition: 'Summary of a research paper', synonym: 'Synopsis', hint: 'A', example: 'The synopsis outlined key findings.' },
+    { word: 'Bibliography', definition: 'List of referenced works', synonym: 'References', hint: 'B', example: 'The references must follow APA style.' },
+    { word: 'Correlation', definition: 'Mutual relationship between variables', synonym: 'Association', hint: 'C', example: 'The association was statistically significant.' },
+    { word: 'Dissertation', definition: 'Extended academic paper', synonym: 'Thesis', hint: 'D', example: 'Her thesis won departmental honors.' },
+    { word: 'Empirical', definition: 'Based on observation', synonym: 'Observational', hint: 'E', example: 'The observational data confirmed predictions.' },
+    { word: 'Fallacy', definition: 'Flawed reasoning', synonym: 'Misconception', hint: 'F', example: 'This misconception invalidates the argument.' },
+    { word: 'Genre', definition: 'Category of academic writing', synonym: 'Classification', hint: 'G', example: 'The classification includes meta-analyses.' },
+    { word: 'Hierarchy', definition: 'System of ranking', synonym: 'Structure', hint: 'H', example: 'The structure of power was analyzed.' },
+    { word: 'Imply', definition: 'Suggest without stating', synonym: 'Insinuate', hint: 'I', example: 'The results insinuate a broader trend.' },
+    { word: 'Jurisdiction', definition: 'Official authority', synonym: 'Purview', hint: 'J', example: 'This falls outside our research purview.' },
+    { word: 'Kinetic', definition: 'Relating to motion', synonym: 'Dynamic', hint: 'K', example: 'The dynamic model predicted outcomes.' },
+    { word: 'Lexicon', definition: 'Vocabulary of a field', synonym: 'Terminology', hint: 'L', example: 'Master the terminology before publishing.' },
+    { word: 'Metaphor', definition: 'Figurative comparison', synonym: 'Analogy', hint: 'M', example: 'The analogy clarified the concept.' },
+    { word: 'Notion', definition: 'General understanding', synonym: 'Concept', hint: 'N', example: 'The concept dates back to Aristotle.' },
+    { word: 'Orthodox', definition: 'Conforming to tradition', synonym: 'Conventional', hint: 'O', example: 'The conventional approach was challenged.' },
+    { word: 'Paradigm', definition: 'Distinct conceptual model', synonym: 'Framework', hint: 'P', example: 'The framework shifted in the 1990s.' },
+    { word: 'Qualitative', definition: 'Non-numerical data', synonym: 'Descriptive', hint: 'Q', example: 'Descriptive research provides context.' },
+    { word: 'Rhetoric', definition: 'Art of effective speaking', synonym: 'Persuasion', hint: 'R', example: 'Her persuasion techniques were studied.' },
+    { word: 'Syntax', definition: 'Arrangement of words', synonym: 'Structure', hint: 'S', example: 'The sentence structure was analyzed.' },
+    { word: 'Tenet', definition: 'Core principle', synonym: 'Doctrine', hint: 'T', example: 'This doctrine underpins the philosophy.' },
+    { word: 'Utilitarian', definition: 'Practical rather than attractive', synonym: 'Functional', hint: 'U', example: 'The functional design prioritized efficiency.' },
+    { word: 'Validate', definition: 'Check accuracy of', synonym: 'Verify', hint: 'V', example: 'Replicate the experiment to verify results.' },
+    { word: 'Warrant', definition: 'Justify or necessitate', synonym: 'Merit', hint: 'W', example: 'Do the findings merit further study?' },
+    { word: 'Anomaly', definition: 'Deviation from the norm', synonym: 'Irregularity', hint: 'A', example: 'The irregularity required explanation.' },
+    { word: 'Bracketing', definition: 'Setting aside assumptions', synonym: 'Isolating', hint: 'B', example: 'Isolating variables improves clarity.' },
+    { word: 'Cohort', definition: 'Group sharing characteristics', synonym: 'Demographic', hint: 'C', example: 'The demographic was aged 18-25.' },
+    { word: 'Deductive', definition: 'Reasoning from general to specific', synonym: 'Inferential', hint: 'D', example: 'The inferential approach was used.' },
+    { word: 'Epistemology', definition: 'Theory of knowledge', synonym: 'Cognition', hint: 'E', example: 'The cognition study yielded insights.' },
+    { word: 'Falsify', definition: 'Prove to be wrong', synonym: 'Refute', hint: 'F', example: 'New data may refute the hypothesis.' },
+    { word: 'Gestalt', definition: 'Organized whole', synonym: 'Configuration', hint: 'G', example: 'The configuration theory was applied.' }
+  ],
+  hard: [
+    { word: 'Axiomatic', definition: 'Self-evident truth', synonym: 'Fundamental', hint: 'A', example: 'These fundamental principles are accepted.' },
+    { word: 'Bricolage', definition: 'Construction from diverse sources', synonym: 'Assemblage', hint: 'B', example: 'The assemblage of theories was innovative.' },
+    { word: 'Ceteris paribus', definition: 'All else being equal', synonym: 'Isolated', hint: 'C', example: 'The isolated variable was tested.' },
+    { word: 'Dialectic', definition: 'Logical discussion of ideas', synonym: 'Discourse', hint: 'D', example: 'The philosophical discourse continued.' },
+    { word: 'Eristic', definition: 'Argument for controversy', synonym: 'Contentious', hint: 'E', example: 'The contentious debate continued.' },
+    { word: 'Formalism', definition: 'Strict adherence to forms', synonym: 'Rigidity', hint: 'F', example: 'The rigidity limited interpretation.' },
+    { word: 'Hermeneutics', definition: 'Theory of interpretation', synonym: 'Exegesis', hint: 'H', example: 'Biblical exegesis requires training.' },
+    { word: 'Incommensurable', definition: 'Unable to be compared', synonym: 'Disparate', hint: 'I', example: 'The disparate theories coexisted.' },
+    { word: 'Juxtaposition', definition: 'Placement side by side', synonym: 'Contiguity', hint: 'J', example: 'The contiguity revealed contrasts.' },
+    { word: 'Kairotic', definition: 'Timely and opportune', synonym: 'Propitious', hint: 'K', example: 'The propitious moment was seized.' },
+    { word: 'Liminal', definition: 'Transitional stage', synonym: 'Threshold', hint: 'L', example: 'Threshold spaces were examined.' },
+    { word: 'Metonymy', definition: 'Substitution of related terms', synonym: 'Synecdoche', hint: 'M', example: 'Synecdoche appears in political discourse.' },
+    { word: 'Nomothetic', definition: 'Generalized laws', synonym: 'Universal', hint: 'N', example: 'The universal approach was debated.' },
+    { word: 'Ontology', definition: 'Nature of existence', synonym: 'Being', hint: 'O', example: 'The philosophy of being was complex.' },
+    { word: 'Phenomenology', definition: 'Study of consciousness', synonym: 'Perception', hint: 'P', example: 'Human perception was the focus.' },
+    { word: 'Quotidian', definition: 'Occurring daily', synonym: 'Routine', hint: 'Q', example: 'Routine practices were cataloged.' },
+    { word: 'Recursivity', definition: 'Repetitive application', synonym: 'Iteration', hint: 'R', example: 'Mathematical iteration solved it.' },
+    { word: 'Semiotics', definition: 'Study of signs', synonym: 'Symbolism', hint: 'S', example: 'Cultural symbolism was decoded.' },
+    { word: 'Teleology', definition: 'Explanation by purpose', synonym: 'Finalism', hint: 'T', example: 'The finalism argument was made.' },
+    { word: 'Umwelt', definition: 'Organism\'s subjective world', synonym: 'Milieu', hint: 'U', example: 'The animal\'s milieu was mapped.' },
+    { word: 'Verisimilitude', definition: 'Appearance of truth', synonym: 'Plausibility', hint: 'V', example: 'The narrative\'s plausibility was tested.' },
+    { word: 'Weltanschauung', definition: 'Worldview', synonym: 'Perspective', hint: 'W', example: 'The cultural perspective shifted.' },
+    { word: 'Xenology', definition: 'Study of foreign cultures', synonym: 'Ethnology', hint: 'X', example: 'Comparative ethnology was conducted.' },
+    { word: 'Yoking', definition: 'Forced connection', synonym: 'Conflation', hint: 'Y', example: 'The conflation of ideas misled.' },
+    { word: 'Zeitgeist', definition: 'Spirit of the times', synonym: 'Climate', hint: 'Z', example: 'The intellectual climate changed.' },
+    { word: 'Aporia', definition: 'Expression of doubt', synonym: 'Paradox', hint: 'A', example: 'The philosophical paradox remained.' },
+    { word: 'Bifurcation', definition: 'Division into branches', synonym: 'Dichotomy', hint: 'B', example: 'The dichotomy was oversimplified.' },
+    { word: 'Cosmology', definition: 'Study of the universe', synonym: 'Astrophysics', hint: 'C', example: 'The astrophysics paper was seminal.' },
+    { word: 'Doxastic', definition: 'Relating to belief', synonym: 'Credal', hint: 'D', example: 'Credal differences were noted.' },
+    { word: 'Epoché', definition: 'Suspension of judgment', synonym: 'Withholding', hint: 'E', example: 'The withholding of conclusion was methodological.' }
+  ]
+},
+           business: {
+  easy: [
+    { word: 'Asset', definition: 'Resource with economic value', synonym: 'Holding', hint: 'A', example: 'The company’s holdings include real estate.' },
+    { word: 'Budget', definition: 'Financial spending plan', synonym: 'Allocation', hint: 'B', example: 'Our annual allocation was approved.' },
+    { word: 'Capital', definition: 'Financial assets', synonym: 'Resources', hint: 'C', example: 'We need more resources to expand.' },
+    { word: 'Debt', definition: 'Borrowed money', synonym: 'Liability', hint: 'D', example: 'Their liabilities exceeded assets.' },
+    { word: 'Equity', definition: 'Ownership value', synonym: 'Stake', hint: 'E', example: 'She sold her stake in the startup.' },
+    { word: 'Fund', definition: 'Pool of money for a purpose', synonym: 'Reserve', hint: 'F', example: 'The emergency reserve was tapped.' },
+    { word: 'Growth', definition: 'Business expansion', synonym: 'Upsurge', hint: 'G', example: 'The market upsurge surprised analysts.' },
+    { word: 'Hire', definition: 'Employ someone', synonym: 'Recruit', hint: 'H', example: 'We’ll recruit three new engineers.' },
+    { word: 'Income', definition: 'Money earned', synonym: 'Revenue', hint: 'I', example: 'Q3 revenue exceeded forecasts.' },
+    { word: 'Joint', definition: 'Shared between parties', synonym: 'Collaborative', hint: 'J', example: 'The collaborative venture succeeded.' },
+    { word: 'Key', definition: 'Crucially important', synonym: 'Pivotal', hint: 'K', example: 'Pivotal metrics improved this quarter.' },
+    { word: 'Lease', definition: 'Rent property/equipment', synonym: 'Contract', hint: 'L', example: 'The office contract runs for 5 years.' },
+    { word: 'Margin', definition: 'Difference between cost and price', synonym: 'Profit', hint: 'M', example: 'Our profit per unit is shrinking.' },
+    { word: 'Net', definition: 'Remaining after deductions', synonym: 'Final', hint: 'N', example: 'Final profits were disappointing.' },
+    { word: 'Offer', definition: 'Proposal to sell', synonym: 'Proposal', hint: 'O', example: 'Their proposal was competitive.' },
+    { word: 'Profit', definition: 'Financial gain', synonym: 'Earnings', hint: 'P', example: 'Annual earnings rose by 12%.' },
+    { word: 'Quote', definition: 'Estimated price', synonym: 'Estimate', hint: 'Q', example: 'The estimate seemed too high.' },
+    { word: 'Risk', definition: 'Potential for loss', synonym: 'Exposure', hint: 'R', example: 'Our exposure to volatility decreased.' },
+    { word: 'Sale', definition: 'Exchange of goods for money', synonym: 'Transaction', hint: 'S', example: 'The transaction closed yesterday.' },
+    { word: 'Tax', definition: 'Mandatory financial charge', synonym: 'Levy', hint: 'T', example: 'The new levy affects imports.' },
+    { word: 'Unit', definition: 'Single product/item', synonym: 'Component', hint: 'U', example: 'Each component costs $2 to make.' },
+    { word: 'Value', definition: 'Monetary worth', synonym: 'Valuation', hint: 'V', example: 'The company’s valuation doubled.' },
+    { word: 'Wage', definition: 'Regular payment to employees', synonym: 'Compensation', hint: 'W', example: 'Worker compensation increased.' },
+    { word: 'Yield', definition: 'Return on investment', synonym: 'Return', hint: 'Y', example: 'Bond returns remain stable.' },
+    { word: 'Agile', definition: 'Ability to adapt quickly', synonym: 'Adaptive', hint: 'A', example: 'An adaptive strategy won.' },
+    { word: 'Brand', definition: 'Identity of a product', synonym: 'Image', hint: 'B', example: 'Our corporate image improved.' },
+    { word: 'Cycle', definition: 'Recurring period', synonym: 'Phase', hint: 'C', example: 'The product phase is ending.' },
+    { word: 'Deal', definition: 'Business agreement', synonym: 'Arrangement', hint: 'D', example: 'The arrangement benefits both sides.' },
+    { word: 'Export', definition: 'Send goods abroad', synonym: 'Ship', hint: 'E', example: 'We ship to 30 countries.' },
+    { word: 'Fiscal', definition: 'Related to government revenue', synonym: 'Financial', hint: 'F', example: 'New financial policies passed.' }
+  ],
+  medium: [
+    { word: 'Acquisition', definition: 'Purchase of one company by another', synonym: 'Takeover', hint: 'A', example: 'The takeover was hostile.' },
+    { word: 'Benchmark', definition: 'Standard for comparison', synonym: 'Metric', hint: 'B', example: 'Our metrics outperform peers.' },
+    { word: 'Commodity', definition: 'Basic tradeable good', synonym: 'Product', hint: 'C', example: 'Agricultural products fluctuated.' },
+    { word: 'Dividend', definition: 'Share of profits to shareholders', synonym: 'Payout', hint: 'D', example: 'The quarterly payout increased.' },
+    { word: 'Equity', definition: 'Value of shares issued', synonym: 'Ownership', hint: 'E', example: 'Employee ownership grew.' },
+    { word: 'Franchise', definition: 'License to sell a brand', synonym: 'License', hint: 'F', example: 'The license fee was steep.' },
+    { word: 'Goodwill', definition: 'Intangible business value', synonym: 'Reputation', hint: 'G', example: 'Their reputation attracted buyers.' },
+    { word: 'Hedge', definition: 'Offset financial risk', synonym: 'Protect', hint: 'H', example: 'We protected against inflation.' },
+    { word: 'Inflation', definition: 'Rise in price levels', synonym: 'Increase', hint: 'I', example: 'The price increase slowed.' },
+    { word: 'Leverage', definition: 'Use borrowed capital', synonym: 'Borrowing', hint: 'L', example: 'Strategic borrowing boosted growth.' },
+    { word: 'Merger', definition: 'Combination of two companies', synonym: 'Consolidation', hint: 'M', example: 'The consolidation created synergies.' },
+    { word: 'Negotiate', definition: 'Discuss to reach agreement', synonym: 'Mediate', hint: 'N', example: 'Lawyers mediated the terms.' },
+    { word: 'Overhead', definition: 'Ongoing business expenses', synonym: 'Costs', hint: 'O', example: 'Fixed costs were reduced.' },
+    { word: 'Portfolio', definition: 'Range of investments', synonym: 'Holdings', hint: 'P', example: 'Our holdings diversified.' },
+    { word: 'Quarter', definition: 'Three-month business period', synonym: 'Term', hint: 'Q', example: 'Next term looks promising.' },
+    { word: 'ROI', definition: 'Return on investment', synonym: 'Gain', hint: 'R', example: 'The marketing gain was 300%.' },
+    { word: 'Stakeholder', definition: 'Party with business interest', synonym: 'Investor', hint: 'S', example: 'Investors demanded transparency.' },
+    { word: 'Tariff', definition: 'Tax on imports/exports', synonym: 'Duty', hint: 'T', example: 'The duty affected trade.' },
+    { word: 'Upsell', definition: 'Encourage purchase of upgrades', synonym: 'Promote', hint: 'U', example: 'We promote premium options.' },
+    { word: 'Venture', definition: 'Risky business undertaking', synonym: 'Enterprise', hint: 'V', example: 'The enterprise paid off.' },
+    { word: 'Wholesale', definition: 'Sell in large quantities', synonym: 'Bulk', hint: 'W', example: 'Bulk prices dropped 10%.' },
+    { word: 'X-efficiency', definition: 'Optimal productivity', synonym: 'Performance', hint: 'X', example: 'Peak performance was achieved.' },
+    { word: 'Yield', definition: 'Income from investment', synonym: 'Return', hint: 'Y', example: 'Annual returns stabilized.' },
+    { word: 'Zeitgeist', definition: 'Spirit of the market era', synonym: 'Trend', hint: 'Z', example: 'Current trends favor sustainability.' },
+    { word: 'Arbitrage', definition: 'Exploit price differences', synonym: 'Trade', hint: 'A', example: 'The trade exploited gaps.' },
+    { word: 'Break-even', definition: 'Point of no profit/loss', synonym: 'Equilibrium', hint: 'B', example: 'We reached equilibrium faster.' },
+    { word: 'Cashflow', definition: 'Movement of money', synonym: 'Liquidity', hint: 'C', example: 'Liquidity improved this quarter.' },
+    { word: 'Disrupt', definition: 'Radically change an industry', synonym: 'Transform', hint: 'D', example: 'Tech transformed retail.' },
+    { word: 'Escrow', definition: 'Held funds until conditions met', synonym: 'Deposit', hint: 'E', example: 'The deposit was secured.' },
+    { word: 'Freemium', definition: 'Free basic, paid premium services', synonym: 'Model', hint: 'F', example: 'This model attracts users.' }
+  ],
+  hard: [
+    { word: 'Amortization', definition: 'Gradual debt repayment', synonym: 'Depreciation', hint: 'A', example: 'The depreciation schedule spans 10 years.' },
+    { word: 'B2B', definition: 'Business-to-business commerce', synonym: 'Wholesale', hint: 'B', example: 'Wholesale platforms dominate.' },
+    { word: 'Cannibalization', definition: 'New product reduces sales of existing ones', synonym: 'Replacement', hint: 'C', example: 'The replacement effect worried investors.' },
+    { word: 'Derivative', definition: 'Financial instrument based on underlying assets', synonym: 'Security', hint: 'D', example: 'Complex securities were traded.' },
+    { word: 'EBITDA', definition: 'Earnings before interest, taxes, depreciation, amortization', synonym: 'Profitability', hint: 'E', example: 'True profitability was obscured.' },
+    { word: 'Fiduciary', definition: 'Legal obligation to act in others’ best interest', synonym: 'Trustee', hint: 'F', example: 'As trustees, we prioritize clients.' },
+    { word: 'Golden parachute', definition: 'Lucrative benefits for exiting executives', synonym: 'Severance', hint: 'G', example: 'The CEO’s severance package sparked outrage.' },
+    { word: 'Horizontal integration', definition: 'Acquisition of similar companies', synonym: 'Consolidation', hint: 'H', example: 'Industry consolidation reduced competition.' },
+    { word: 'Illiquid', definition: 'Difficult to convert to cash', synonym: 'Nonfluid', hint: 'I', example: 'Nonfluid assets posed challenges.' },
+    { word: 'J-curve', definition: 'Initial dip followed by rise in performance', synonym: 'Pattern', hint: 'J', example: 'The investment pattern emerged.' },
+    { word: 'KPI', definition: 'Key performance indicator', synonym: 'Metric', hint: 'K', example: 'Critical metrics were tracked.' },
+    { word: 'Liquidation', definition: 'Winding up a business by selling assets', synonym: 'Dissolution', hint: 'L', example: 'The dissolution process began.' },
+    { word: 'Monopsony', definition: 'Market with single buyer', synonym: 'Control', hint: 'M', example: 'The retailer had undue control.' },
+    { word: 'Niche', definition: 'Specialized market segment', synonym: 'Segment', hint: 'N', example: 'This segment is underserved.' },
+    { word: 'Oligopoly', definition: 'Market dominated by few sellers', synonym: 'Dominance', hint: 'O', example: 'Tech dominance concerns regulators.' },
+    { word: 'Paradigm shift', definition: 'Fundamental change in approach', synonym: 'Transformation', hint: 'P', example: 'The industry transformation accelerated.' },
+    { word: 'Quantitative easing', definition: 'Central bank stimulus policy', synonym: 'Injection', hint: 'Q', example: 'The cash injection stabilized markets.' },
+    { word: 'Redeemable', definition: 'Convertible to cash/shares', synonym: 'Exchangeable', hint: 'R', example: 'These bonds are exchangeable.' },
+    { word: 'Synergy', definition: 'Combined value exceeding individual parts', synonym: 'Collaboration', hint: 'S', example: 'Strategic collaboration created value.' },
+    { word: 'Tranche', definition: 'Portion of pooled securities', synonym: 'Segment', hint: 'T', example: 'The highest-risk segment defaulted.' },
+    { word: 'Unicorn', definition: 'Startup valued over $1B', synonym: 'Venture', hint: 'U', example: 'The tech venture went public.' },
+    { word: 'Vertical integration', definition: 'Control of supply chain stages', synonym: 'Control', hint: 'V', example: 'Production control reduced costs.' },
+    { word: 'Working capital', definition: 'Short-term liquid assets', synonym: 'Liquidity', hint: 'W', example: 'Operational liquidity improved.' },
+    { word: 'Xenocurrency', definition: 'Currency circulating outside native country', synonym: 'Foreign', hint: 'X', example: 'Foreign holdings increased.' },
+    { word: 'Yield curve', definition: 'Interest rates across bond maturities', synonym: 'Graph', hint: 'Y', example: 'The inverted graph worried analysts.' },
+    { word: 'Zero-sum game', definition: 'One’s gain equals another’s loss', synonym: 'Competition', hint: 'Z', example: 'The negotiation was pure competition.' },
+    { word: 'Alpha', definition: 'Investment performance above benchmarks', synonym: 'Outperformance', hint: 'A', example: 'The fund’s outperformance continued.' },
+    { word: 'Beta', definition: 'Measure of investment volatility', synonym: 'Risk', hint: 'B', example: 'The stock’s risk was low.' },
+    { word: 'Crowdfunding', definition: 'Raising capital from many individuals', synonym: 'Financing', hint: 'C', example: 'Creative financing succeeded.' },
+    { word: 'Disintermediation', definition: 'Removing intermediaries from transactions', synonym: 'Streamlining', hint: 'D', example: 'Blockchain enables streamlining.' }
+  ]
+},
+technology: {
+  easy: [
+    { word: 'App', definition: 'Software application', synonym: 'Program', hint: 'A', example: 'This mobile program helps with budgeting.' },
+    { word: 'Browser', definition: 'Internet navigation tool', synonym: 'Navigator', hint: 'B', example: 'The navigator blocked pop-up ads.' },
+    { word: 'Cloud', definition: 'Remote data storage', synonym: 'Storage', hint: 'C', example: 'Files moved to online storage.' },
+    { word: 'Data', definition: 'Digital information', synonym: 'Information', hint: 'D', example: 'The information was encrypted.' },
+    { word: 'Email', definition: 'Electronic messaging', synonym: 'Correspondence', hint: 'E', example: 'Professional correspondence requires care.' },
+    { word: 'Firewall', definition: 'Network security system', synonym: 'Barrier', hint: 'F', example: 'The barrier prevented intrusions.' },
+    { word: 'Gigabyte', definition: 'Data measurement unit', synonym: 'Capacity', hint: 'G', example: 'Phone capacity reached its limit.' },
+    { word: 'Hacker', definition: 'Computer security intruder', synonym: 'Intruder', hint: 'H', example: 'The intrer breached weak passwords.' },
+    { word: 'Internet', definition: 'Global computer network', synonym: 'Network', hint: 'I', example: 'The network outage lasted hours.' },
+    { word: 'Java', definition: 'Programming language', synonym: 'Code', hint: 'J', example: 'The system uses this code.' },
+    { word: 'Keyboard', definition: 'Input device', synonym: 'Controller', hint: 'K', example: 'The wireless controller disconnected.' },
+    { word: 'Link', definition: 'Webpage connector', synonym: 'Connector', hint: 'L', example: 'Click the connector to proceed.' },
+    { word: 'Monitor', definition: 'Display screen', synonym: 'Screen', hint: 'M', example: 'The screen resolution improved.' },
+    { word: 'Network', definition: 'Connected computers', synonym: 'System', hint: 'N', example: 'The office system crashed.' },
+    { word: 'Online', definition: 'Connected to internet', synonym: 'Connected', hint: 'O', example: 'Stay connected for updates.' },
+    { word: 'Password', definition: 'Security phrase', synonym: 'Cipher', hint: 'P', example: 'Change your cipher monthly.' },
+    { word: 'Query', definition: 'Database request', synonym: 'Request', hint: 'Q', example: 'The search request timed out.' },
+    { word: 'RAM', definition: 'Temporary memory', synonym: 'Memory', hint: 'R', example: 'More memory boosts performance.' },
+    { word: 'Software', definition: 'Digital programs', synonym: 'Applications', hint: 'S', example: 'Update all applications regularly.' },
+    { word: 'Tablet', definition: 'Mobile touchscreen device', synonym: 'Device', hint: 'T', example: 'The portable device malfunctioned.' },
+    { word: 'Upload', definition: 'Transfer data remotely', synonym: 'Transfer', hint: 'U', example: 'Transfer speeds were slow.' },
+    { word: 'Virus', definition: 'Malicious software', synonym: 'Malware', hint: 'V', example: 'The malware infected many files.' },
+    { word: 'WiFi', definition: 'Wireless networking', synonym: 'Wireless', hint: 'W', example: 'The wireless signal was weak.' },
+    { word: 'XML', definition: 'Markup language', synonym: 'Language', hint: 'X', example: 'This language structures data.' },
+    { word: 'YouTube', definition: 'Video sharing platform', synonym: 'Platform', hint: 'Y', example: 'The platform removed the content.' },
+    { word: 'Zip', definition: 'Compressed file format', synonym: 'Archive', hint: 'Z', example: 'Download the archive first.' },
+    { word: 'Algorithm', definition: 'Step-by-step procedure', synonym: 'Process', hint: 'A', example: 'The sorting process optimized results.' },
+    { word: 'Bandwidth', definition: 'Data transfer capacity', synonym: 'Capacity', hint: 'B', example: 'Streaming requires high capacity.' },
+    { word: 'Cache', definition: 'Temporary storage', synonym: 'Memory', hint: 'C', example: 'Clear your memory regularly.' },
+    { word: 'Domain', definition: 'Website address', synonym: 'Address', hint: 'D', example: 'The web address expired.' }
+  ],
+  medium: [
+    { word: 'API', definition: 'Application programming interface', synonym: 'Interface', hint: 'A', example: 'The interface connects services.' },
+    { word: 'Backend', definition: 'Server-side development', synonym: 'Server', hint: 'B', example: 'Server errors caused downtime.' },
+    { word: 'Cryptography', definition: 'Secure communication', synonym: 'Encryption', hint: 'C', example: 'Military-grade encryption was used.' },
+    { word: 'DevOps', definition: 'Development-operations methodology', synonym: 'Method', hint: 'D', example: 'The method improved deployment.' },
+    { word: 'Encryption', definition: 'Data scrambling', synonym: 'Encoding', hint: 'E', example: 'The encoding made data unreadable.' },
+    { word: 'Framework', definition: 'Software development platform', synonym: 'Platform', hint: 'F', example: 'The platform simplified coding.' },
+    { word: 'Git', definition: 'Version control system', synonym: 'Control', hint: 'G', example: 'The control system tracked changes.' },
+    { word: 'HTML', definition: 'Hypertext markup language', synonym: 'Markup', hint: 'H', example: 'The markup needed validation.' },
+    { word: 'IoT', definition: 'Internet of Things', synonym: 'Devices', hint: 'I', example: 'Smart devices proliferated.' },
+    { word: 'JSON', definition: 'Data interchange format', synonym: 'Format', hint: 'J', example: 'The format is machine-readable.' },
+    { word: 'Kernel', definition: 'Core of operating system', synonym: 'Core', hint: 'K', example: 'The core manages resources.' },
+    { word: 'Linux', definition: 'Open-source OS', synonym: 'System', hint: 'L', example: 'The system is highly customizable.' },
+    { word: 'Machine Learning', definition: 'AI using data patterns', synonym: 'AI', hint: 'M', example: 'The AI improved predictions.' },
+    { word: 'Node.js', definition: 'JavaScript runtime', synonym: 'Runtime', hint: 'N', example: 'The runtime executed efficiently.' },
+    { word: 'Open Source', definition: 'Publicly editable code', synonym: 'Code', hint: 'O', example: 'Community code thrives.' },
+    { word: 'Python', definition: 'Programming language', synonym: 'Language', hint: 'P', example: 'The language prioritizes readability.' },
+    { word: 'Query', definition: 'Database information request', synonym: 'Request', hint: 'Q', example: 'The database request failed.' },
+    { word: 'React', definition: 'JavaScript library', synonym: 'Library', hint: 'R', example: 'The library built interfaces.' },
+    { word: 'Scalability', definition: 'System growth capacity', synonym: 'Growth', hint: 'S', example: 'The growth potential impressed.' },
+    { word: 'TensorFlow', definition: 'Machine learning platform', synonym: 'Platform', hint: 'T', example: 'The platform trained models.' },
+    { word: 'UI', definition: 'User interface', synonym: 'Interface', hint: 'U', example: 'The interface confused users.' },
+    { word: 'Virtualization', definition: 'Creating virtual versions', synonym: 'Simulation', hint: 'V', example: 'Hardware simulation saved costs.' },
+    { word: 'Webpack', definition: 'JavaScript module bundler', synonym: 'Bundler', hint: 'W', example: 'The bundler optimized assets.' },
+    { word: 'XSS', definition: 'Cross-site scripting attack', synonym: 'Attack', hint: 'X', example: 'The attack injected scripts.' },
+    { word: 'YAML', definition: 'Human-readable data format', synonym: 'Format', hint: 'Y', example: 'The format configured services.' },
+    { word: 'Zero-day', definition: 'Unpatched vulnerability', synonym: 'Flaw', hint: 'Z', example: 'Hackers exploited the flaw.' },
+    { word: 'Agile', definition: 'Iterative development', synonym: 'Method', hint: 'A', example: 'The method accelerated delivery.' },
+    { word: 'Blockchain', definition: 'Decentralized ledger', synonym: 'Ledger', hint: 'B', example: 'The ledger recorded transactions.' },
+    { word: 'CI/CD', definition: 'Continuous integration/delivery', synonym: 'Pipeline', hint: 'C', example: 'The pipeline automated testing.' },
+    { word: 'DNS', definition: 'Domain name system', synonym: 'System', hint: 'D', example: 'The system translated addresses.' }
+  ],
+  hard: [
+    { word: 'Asynchronous', definition: 'Non-sequential operations', synonym: 'Independent', hint: 'A', example: 'Independent processes improved speed.' },
+    { word: 'Biometrics', definition: 'Biological identification', synonym: 'Authentication', hint: 'B', example: 'The authentication used fingerprints.' },
+    { word: 'Cybernetics', definition: 'Control systems theory', synonym: 'Theory', hint: 'C', example: 'The theory merged disciplines.' },
+    { word: 'Deterministic', definition: 'Predictable outcomes', synonym: 'Predictable', hint: 'D', example: 'Predictable algorithms were preferred.' },
+    { word: 'Ephemeral', definition: 'Short-lived data', synonym: 'Temporary', hint: 'E', example: 'Temporary messages auto-deleted.' },
+    { word: 'Firmware', definition: 'Permanent software', synonym: 'Software', hint: 'F', example: 'The device software updated.' },
+    { word: 'GraphQL', definition: 'Query language for APIs', synonym: 'Language', hint: 'G', example: 'The language fetched precise data.' },
+    { word: 'Homomorphic', definition: 'Encrypted data computation', synonym: 'Computation', hint: 'H', example: 'Secure computation preserved privacy.' },
+    { word: 'Idempotent', definition: 'Repeatable operations', synonym: 'Repeatable', hint: 'I', example: 'Repeatable requests prevented errors.' },
+    { word: 'Jitter', definition: 'Timing variation', synonym: 'Variation', hint: 'J', example: 'Network variation disrupted calls.' },
+    { word: 'Kubernetes', definition: 'Container orchestration', synonym: 'Orchestration', hint: 'K', example: 'The orchestration scaled containers.' },
+    { word: 'Lisp', definition: 'Programming language', synonym: 'Language', hint: 'L', example: 'The language influenced AI.' },
+    { word: 'Microservices', definition: 'Independent service components', synonym: 'Components', hint: 'M', example: 'The components communicated via APIs.' },
+    { word: 'Neural Network', definition: 'AI modeled on brains', synonym: 'Model', hint: 'N', example: 'The model recognized patterns.' },
+    { word: 'OAuth', definition: 'Authorization protocol', synonym: 'Protocol', hint: 'O', example: 'The protocol granted limited access.' },
+    { word: 'Polymorphism', definition: 'Multiple forms in coding', synonym: 'Versatility', hint: 'P', example: 'The versatility simplified design.' },
+    { word: 'Quantum Computing', definition: 'Qubit-based processing', synonym: 'Processing', hint: 'Q', example: 'The processing solved complex problems.' },
+    { word: 'Recursion', definition: 'Self-referential algorithms', synonym: 'Repetition', hint: 'R', example: 'The repetition required care.' },
+    { word: 'Syntactic Sugar', definition: 'Code readability enhancers', synonym: 'Enhancers', hint: 'S', example: 'The enhancers didn’t change functionality.' },
+    { word: 'Topology', definition: 'Network structure', synonym: 'Structure', hint: 'T', example: 'The structure determined efficiency.' },
+    { word: 'Ubiquitous', definition: 'Omnipresent computing', synonym: 'Pervasive', hint: 'U', example: 'Pervasive sensors collected data.' },
+    { word: 'Vectorization', definition: 'Parallel data processing', synonym: 'Processing', hint: 'V', example: 'The processing accelerated calculations.' },
+    { word: 'WebAssembly', definition: 'Binary instruction format', synonym: 'Format', hint: 'W', example: 'The format boosted performance.' },
+    { word: 'XOR', definition: 'Exclusive OR operation', synonym: 'Operation', hint: 'X', example: 'The operation compared bits.' },
+    { word: 'Yottabyte', definition: 'Massive data unit', synonym: 'Unit', hint: 'Y', example: 'The unit seemed unimaginably large.' },
+    { word: 'Zettabyte', definition: 'Extreme data measurement', synonym: 'Measurement', hint: 'Z', example: 'The measurement exceeded exabytes.' },
+    { word: 'Affordance', definition: 'Perceived action possibilities', synonym: 'Possibility', hint: 'A', example: 'The possibility guided users.' },
+    { word: 'Breadth-First', definition: 'Graph traversal method', synonym: 'Method', hint: 'B', example: 'The method explored neighbors first.' },
+    { word: 'CORS', definition: 'Cross-origin resource sharing', synonym: 'Sharing', hint: 'C', example: 'The sharing required headers.' },
+    { word: 'Debouncing', definition: 'Input delay technique', synonym: 'Technique', hint: 'D', example: 'The technique reduced processing.' }
+  ]
+},
+        };
+
+        // Game state
+        let gameState = {
+            userName: "",
+            difficulty: "easy",
+            category: "general",
+            currentQuestion: 0,
+            correctAnswers: 0,
+            streak: 0,
+            maxStreak: 0,
+            timedMode: false,
+            timeLeft: 10,
+            timer: null,
+            userAnswers: [],
+            badges: [],
+            darkMode: false,
+            soundEnabled: true,
+            hintsEnabled: true
+        };
+
+        // High scores
+        let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+
+        // DOM elements
+        const elements = {
+            name: document.getElementById('name'),
+            difficulty: document.getElementById('difficulty'),
+            category: document.getElementById('category'),
+            timedMode: document.getElementById('timed-mode'),
+            darkMode: document.getElementById('dark-mode'),
+            soundEffects: document.getElementById('sound-effects'),
+            showHints: document.getElementById('show-hints'),
+            settingsPanel: document.getElementById('settings-panel'),
+            testSection: document.getElementById('test-section'),
+            resultSection: document.getElementById('result'),
+            highscoreSection: document.getElementById('highscore-section'),
+            answersSection: document.getElementById('answers-section'),
+            badgesSection: document.getElementById('badges-section'),
+            startSection: document.getElementById('start-section'),
+            progressBar: document.getElementById('progress-bar'),
+            questionNumber: document.getElementById('question-number'),
+            timerDisplay: document.getElementById('timer'),
+            streakCounter: document.getElementById('streak-counter'),
+            definition: document.getElementById('definition'),
+            hint: document.getElementById('hint'),
+            synonym: document.getElementById('synonym'),
+            example: document.getElementById('example'),
+            userAnswer: document.getElementById('user-answer'),
+            scoreDisplay: document.getElementById('score'),
+            finalStreak: document.getElementById('final-streak'),
+            correctRate: document.getElementById('correct-rate'),
+            resultMessage: document.getElementById('result-message'),
+            leaderboard: document.getElementById('leaderboard'),
+            answersList: document.getElementById('answers-list'),
+            badgesList: document.getElementById('badges-list'),
+            correctSound: document.getElementById('correct-sound'),
+            wrongSound: document.getElementById('wrong-sound'),
+            winSound: document.getElementById('win-sound')
+        };
+
+        // Initialize settings from localStorage
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('spellingBeeSettings')) || {};
+            gameState.darkMode = settings.darkMode || false;
+            gameState.soundEnabled = settings.soundEnabled !== false;
+            gameState.hintsEnabled = settings.hintsEnabled !== false;
+            
+            elements.darkMode.checked = gameState.darkMode;
+            elements.soundEffects.checked = gameState.soundEnabled;
+            elements.showHints.checked = gameState.hintsEnabled;
+            
+            if (gameState.darkMode) document.body.classList.add('dark-mode');
+        }
+
+        // Save settings to localStorage
+        function saveSettings() {
+            const settings = {
+                darkMode: gameState.darkMode,
+                soundEnabled: gameState.soundEnabled,
+                hintsEnabled: gameState.hintsEnabled
+            };
+            localStorage.setItem('spellingBeeSettings', JSON.stringify(settings));
+        }
+
+        // Toggle settings panel
+        function toggleSettings() {
+            elements.settingsPanel.style.display = 
+                elements.settingsPanel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            gameState.darkMode = !gameState.darkMode;
+            document.body.classList.toggle('dark-mode');
+            saveSettings();
+        }
+
+        // Start the test
+        function startTest() {
+            gameState.userName = elements.name.value.trim();
+            if (!gameState.userName) {
+                alert("Please enter your name!");
+                return;
+            }
+            
+            gameState.difficulty = elements.difficulty.value;
+            gameState.category = elements.category.value;
+            gameState.timedMode = elements.timedMode.checked;
+            gameState.currentQuestion = 0;
+            gameState.correctAnswers = 0;
+            gameState.streak = 0;
+            gameState.maxStreak = 0;
+            gameState.userAnswers = [];
+            
+            elements.startSection.style.display = 'none';
+            elements.testSection.style.display = 'block';
+            elements.userAnswer.focus();
+            
+            loadQuestion();
+        }
+
+        // Load question
+        function loadQuestion() {
+            if (gameState.currentQuestion >= 30) {
+                showResults();
+                return;
+            }
+            
+            const questions = wordDatabase[gameState.category][gameState.difficulty];
+            const question = questions[gameState.currentQuestion];
+            
+            elements.questionNumber.textContent = gameState.currentQuestion + 1;
+            elements.progressBar.style.width = `${(gameState.currentQuestion / 30) * 100}%`;
+            elements.definition.textContent = `Definition: ${question.definition}`;
+            elements.synonym.textContent = `Synonym: ${question.synonym}`;
+            elements.example.textContent = `Example: ${question.example}`;
+            
+            if (gameState.hintsEnabled) {
+                elements.hint.textContent = `Hint: The first letter is "${question.hint}"`;
+                elements.hint.style.display = 'block';
+            } else {
+                elements.hint.style.display = 'none';
+            }
+            
+            elements.streakCounter.textContent = gameState.streak > 0 ? `🔥 Streak: ${gameState.streak}` : '';
+            
+            if (gameState.timedMode) {
+                gameState.timeLeft = 10;
+                elements.timerDisplay.textContent = `Time: ${gameState.timeLeft}s`;
+                clearInterval(gameState.timer);
+                gameState.timer = setInterval(() => {
+                    gameState.timeLeft--;
+                    elements.timerDisplay.textContent = `Time: ${gameState.timeLeft}s`;
+                    if (gameState.timeLeft <= 0) {
+                        clearInterval(gameState.timer);
+                        checkAnswer();
+                    }
+                }, 1000);
+            } else {
+                elements.timerDisplay.textContent = '';
+            }
+        }
+
+        // Check answer
+        function checkAnswer() {
+            clearInterval(gameState.timer);
+            
+            const userAnswer = elements.userAnswer.value.trim().toLowerCase();
+            const questions = wordDatabase[gameState.category][gameState.difficulty];
+            const correctWord = questions[gameState.currentQuestion].word.toLowerCase();
+            
+            const isCorrect = userAnswer === correctWord;
+            gameState.userAnswers.push({
+                word: questions[gameState.currentQuestion].word,
+                userAnswer,
+                correct: isCorrect
+            });
+            
+            if (isCorrect) {
+                gameState.correctAnswers++;
+                gameState.streak++;
+                if (gameState.streak > gameState.maxStreak) {
+                    gameState.maxStreak = gameState.streak;
+                }
+                if (gameState.soundEnabled) elements.correctSound.play();
+                showConfetti(5);
+            } else {
+                gameState.streak = 0;
+                if (gameState.soundEnabled) elements.wrongSound.play();
+            }
+            
+            gameState.currentQuestion++;
+            elements.userAnswer.value = "";
+            
+            if (gameState.currentQuestion < 30) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Skip question
+        function skipQuestion() {
+            clearInterval(gameState.timer);
+            gameState.userAnswers.push({
+                word: wordDatabase[gameState.category][gameState.difficulty][gameState.currentQuestion].word,
+                userAnswer: "(skipped)",
+                correct: false
+            });
+            gameState.currentQuestion++;
+            gameState.streak = 0;
+            elements.userAnswer.value = "";
+            
+            if (gameState.currentQuestion < 30) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Show results
+        function showResults() {
+            elements.testSection.style.display = 'none';
+            elements.resultSection.style.display = 'block';
+            
+            const score = gameState.correctAnswers;
+            const percentage = Math.round((score / 30) * 100);
+            
+            elements.scoreDisplay.textContent = score;
+            elements.finalStreak.textContent = gameState.maxStreak;
+            elements.correctRate.textContent = percentage;
+            
+            // Generate result message
+            let message = "";
+            if (score === 30) {
+                message = "Perfect! You're a spelling champion! 🏆";
+                awardBadge("Perfectionist");
+                if (gameState.soundEnabled) elements.winSound.play();
+                showConfetti(100);
+            } else if (score >= 25) {
+                message = "Excellent! You're really good at this! 👍";
+                awardBadge("Expert Speller");
+            } else if (score >= 20) {
+                message = "Good job! You know your words well! 😊";
+                awardBadge("Word Wizard");
+            } else if (score >= 15) {
+                message = "Not bad! Keep practicing to improve! 💪";
+            } else {
+                message = "Keep trying! You'll get better with practice! 📚";
+            }
+            
+            elements.resultMessage.textContent = message;
+            
+            // Check for streak badge
+            if (gameState.maxStreak >= 10) {
+                awardBadge("Hot Streak");
+            }
+            
+            // Check for timed mode badge
+            if (gameState.timedMode && score >= 25) {
+                awardBadge("Speed Demon");
+            }
+        }
+
+        // Award badge
+        function awardBadge(name) {
+            if (!gameState.badges.includes(name)) {
+                gameState.badges.push(name);
+                // In a real app, you'd save badges to localStorage
+            }
+        }
+
+        // Show confetti animation
+        function showConfetti(count) {
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Next test
+        function nextTest() {
+            elements.resultSection.style.display = 'none';
+            elements.startSection.style.display = 'block';
+            elements.name.value = gameState.userName;
+        }
+
+        // Save high score
+        function saveHighScore() {
+            const score = gameState.correctAnswers;
+            const newScore = {
+                name: gameState.userName,
+                score: score,
+                difficulty: gameState.difficulty,
+                category: gameState.category,
+                date: new Date().toLocaleDateString()
+            };
+            
+            highScores.push(newScore);
+            highScores.sort((a, b) => b.score - a.score);
+            if (highScores.length > 10) highScores.length = 10;
+            
+            localStorage.setItem('highScores', JSON.stringify(highScores));
+            showLeaderboard();
+        }
+
+        // Show leaderboard
+        function showLeaderboard() {
+            elements.resultSection.style.display = 'none';
+            elements.highscoreSection.style.display = 'block';
+            
+            let leaderboardHTML = '<ol>';
+            highScores.forEach((entry, index) => {
+                leaderboardHTML += `
+                    <li>
+                        ${entry.name} - ${entry.score}/30 
+                        <small>(${entry.difficulty}, ${entry.category}, ${entry.date})</small>
+                    </li>
+                `;
+            });
+            leaderboardHTML += '</ol>';
+            
+            elements.leaderboard.innerHTML = leaderboardHTML;
+        }
+
+        // See answers
+        function seeAnswers() {
+            elements.resultSection.style.display = 'none';
+            elements.answersSection.style.display = 'block';
+            
+            let answersHTML = '';
+            gameState.userAnswers.forEach((answer, index) => {
+                const isCorrect = answer.correct;
+                answersHTML += `
+                    <div class="answer" style="background-color: ${isCorrect ? 'var(--correct)' : 'var(--incorrect)'}">
+                        <strong>Word ${index + 1}:</strong> ${answer.word}<br>
+                        <strong>Your answer:</strong> ${answer.userAnswer}<br>
+                        <strong>Result:</strong> ${isCorrect ? 'Correct ✓' : 'Incorrect ✗'}
+                    </div>
+                `;
+            });
+            
+            elements.answersList.innerHTML = answersHTML;
+        }
+
+        // Show badges
+        function showBadges() {
+            elements.resultSection.style.display = 'none';
+            elements.badgesSection.style.display = 'block';
+            
+            let badgesHTML = '<p>You have earned these badges:</p><div>';
+            gameState.badges.forEach(badge => {
+                badgesHTML += `<span class="badge">${badge}</span> `;
+            });
+            
+            if (gameState.badges.length === 0) {
+                badgesHTML = '<p>No badges yet. Keep playing to earn some!</p>';
+            }
+            
+            elements.badgesList.innerHTML = badgesHTML;
+        }
+
+        // Hide answers
+        function hideAnswers() {
+            elements.answersSection.style.display = 'none';
+            elements.resultSection.style.display = 'block';
+        }
+
+        // Hide badges
+        function hideBadges() {
+            elements.badgesSection.style.display = 'none';
+            elements.resultSection.style.display = 'block';
+        }
+
+        // Event listeners
+        elements.darkMode.addEventListener('change', function() {
+            gameState.darkMode = this.checked;
+            toggleDarkMode();
+        });
+
+        elements.soundEffects.addEventListener('change', function() {
+            gameState.soundEnabled = this.checked;
+            saveSettings();
+        });
+
+        elements.showHints.addEventListener('change', function() {
+            gameState.hintsEnabled = this.checked;
+            saveSettings();
+        });
+
+        elements.userAnswer.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+
+        // Initialize
+        loadSettings();
+    </script>
+</body>
+</html>
