@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Guide to Polynomial Functions</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #004d7f;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 2.2em;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            background-color: #003366;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #005599;
+        }
+
+        section {
+            margin: 25px auto;
+            padding: 25px;
+            max-width: 1000px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3, h4 {
+            color: #004d7f;
+        }
+
+        h1 {
+            border-bottom: 2px solid #004d7f;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            margin-top: 30px;
+            border-left: 5px solid #004d7f;
+            padding-left: 15px;
+        }
+
+        h3 {
+            margin-top: 20px;
+            color: #0066cc;
+        }
+
+        h4 {
+            margin-top: 15px;
+            color: #0088ff;
+        }
+
+        ul, ol {
+            padding-left: 25px;
+        }
+
+        ul li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        ul li:before {
+            content: "•";
+            color: #004d7f;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .example {
+            background-color: #e6f7ff;
+            padding: 15px;
+            border-left: 5px solid #004d7f;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .important {
+            background-color: #ffecb3;
+            padding: 15px;
+            border-left: 5px solid #ff9800;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .theorem {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-left: 5px solid #4caf50;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .proof {
+            background-color: #f1f8e9;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-left: 3px solid #7cb342;
+            font-style: italic;
+        }
+
+        .code-example {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            border-radius: 5px;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .section-header {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #003366;
+        }
+
+        .math-box {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 2px solid #004d7f;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .formula {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #004d7f;
+            margin: 15px 0;
+            display: block;
+            text-align: center;
+        }
+
+        .graph-container {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .graph-placeholder {
+            width: 100%;
+            height: 300px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+            border-radius: 5px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #004d7f;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .complexity {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .algorithm {
+            background-color: #fff3e0;
+            padding: 15px;
+            border-left: 5px solid #ff9800;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .history {
+            background-color: #f3e5f5;
+            padding: 15px;
+            border-left: 5px solid #9c27b0;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #004d7f;
+            color: white;
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background-color: #004d7f;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 0 5px 5px 5px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            section {
+                margin: 15px;
+                padding: 15px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    Comprehensive Guide to Polynomial Functions
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#types">Types</a></li>
+        <li><a href="#operations">Operations</a></li>
+        <li><a href="#factorization">Factorization</a></li>
+        <li><a href="#roots">Roots</a></li>
+        <li><a href="#graphs">Graphs</a></li>
+        <li><a href="#calculus">Calculus</a></li>
+        <li><a href="#applications">Applications</a></li>
+    </ul>
+</nav>
+
+<section id="introduction">
+    <h1>Introduction to Polynomial Functions</h1>
+    
+    <p>A <strong>polynomial function</strong> is one of the most fundamental and widely used mathematical concepts, appearing in virtually every branch of mathematics and its applications. Polynomials serve as the building blocks for more complex functions and are essential in numerical analysis, approximation theory, and computer algebra systems.</p>
+    
+    <div class="math-box">
+        <span class="formula">P(x) = a<sub>n</sub>x<sup>n</sup> + a<sub>n-1</sub>x<sup>n-1</sup> + ... + a<sub>2</sub>x<sup>2</sup> + a<sub>1</sub>x + a<sub>0</sub></span>
+    </div>
+    
+    <p>Where:</p>
+    <ul>
+        <li><strong>a<sub>n</sub>, a<sub>n-1</sub>, ..., a<sub>0</sub></strong> are coefficients (real or complex numbers)</li>
+        <li><strong>x</strong> is the variable (indeterminate)</li>
+        <li><strong>n</strong> is the degree of the polynomial (non-negative integer)</li>
+        <li><strong>a<sub>n</sub> ≠ 0</strong> for a polynomial of degree n</li>
+    </ul>
+    
+    <div class="history">
+        <h3>Historical Context</h3>
+        <p>The study of polynomials dates back to ancient Babylonian, Greek, Indian, and Chinese mathematics. The word "polynomial" comes from the Greek words "poly" (many) and "nomial" (term). Significant contributions were made by:</p>
+        <ul>
+            <li><strong>Al-Khwarizmi (9th century):</strong> Systematic solutions to quadratic equations</li>
+            <li><strong>Cardano (16th century):</strong> Solutions to cubic and quartic equations</li>
+            <li><strong>Galois (19th century):</strong> Theory of polynomial equations and group theory</li>
+        </ul>
+    </div>
+    
+    <div class="important">
+        <h3>Fundamental Theorem of Algebra</h3>
+        <p>Every non-zero, single-variable, degree n polynomial with complex coefficients has, counted with multiplicity, exactly n complex roots.</p>
+        <p>This theorem was first proven by Gauss in 1799 in his doctoral dissertation, though earlier attempts were made by d'Alembert, Euler, and others.</p>
+    </div>
+    
+    <h2>Formal Definition</h2>
+    <p>More formally, a polynomial in one variable over a field F is an expression of the form:</p>
+    <div class="math-box">
+        <span class="formula">P(x) = ∑<sub>k=0</sub><sup>n</sup> a<sub>k</sub>x<sup>k</sup></span>
+    </div>
+    <p>where:</p>
+    <ul>
+        <li>n is a non-negative integer</li>
+        <li>a<sub>k</sub> ∈ F for k = 0, 1, ..., n</li>
+        <li>x is a formal symbol (indeterminate)</li>
+    </ul>
+    
+    <h2>Ring Theory Perspective</h2>
+    <p>In abstract algebra, the polynomial ring F[x] is the set of all polynomials with coefficients in a field F. This forms:</p>
+    <ul>
+        <li>A commutative ring with identity</li>
+        <li>A vector space over F</li>
+        <li>A principal ideal domain (PID)</li>
+        <li>A unique factorization domain (UFD)</li>
+    </ul>
+</section>
+
+<section id="types">
+    <h1>Types of Polynomial Functions</h1>
+    
+    <p>Polynomials can be classified in several ways: by degree, by number of terms, or by special forms they take.</p>
+    
+    <h2>Classification by Degree</h2>
+    
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Degree</th>
+                <th>Name</th>
+                <th>General Form</th>
+                <th>Properties</th>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>Constant</td>
+                <td>f(x) = c</td>
+                <td>Horizontal line, no roots (unless c=0)</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Linear</td>
+                <td>f(x) = ax + b</td>
+                <td>Straight line, one root at x=-b/a</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Quadratic</td>
+                <td>f(x) = ax² + bx + c</td>
+                <td>Parabola, up to two real roots</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Cubic</td>
+                <td>f(x) = ax³ + bx² + cx + d</td>
+                <td>S-shaped curve, up to three real roots</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Quartic</td>
+                <td>f(x) = ax⁴ + bx³ + cx² + dx + e</td>
+                <td>W-shaped or M-shaped, up to four real roots</td>
+            </tr>
+            <tr>
+                <td>n</td>
+                <td>n-th degree</td>
+                <td>f(x) = a<sub>n</sub>x<sup>n</sup> + ... + a<sub>0</sub></td>
+                <td>Up to n real roots, behavior depends on n and a<sub>n</sub></td>
+            </tr>
+        </table>
+    </div>
+    
+    <h2>Special Polynomial Forms</h2>
+    
+    <div class="example">
+        <h3>Monic Polynomials</h3>
+        <p>A polynomial where the leading coefficient (a<sub>n</sub>) is 1.</p>
+        <div class="code-example">
+            <code>x³ + 2x² - 5x + 3</code> (monic)<br>
+            <code>2x³ + x - 1</code> (not monic)
+        </div>
+    </div>
+    
+    <div class="example">
+        <h3>Irreducible Polynomials</h3>
+        <p>Polynomials that cannot be factored into products of lower-degree polynomials with coefficients in the same field.</p>
+        <div class="code-example">
+            <code>x² + 1</code> is irreducible over ℝ but reducible over ℂ (factors as (x+i)(x-i))
+        </div>
+    </div>
+    
+    <div class="example">
+        <h3>Orthogonal Polynomials</h3>
+        <p>Families of polynomials that are orthogonal with respect to some inner product. Important examples include:</p>
+        <ul>
+            <li>Legendre polynomials</li>
+            <li>Chebyshev polynomials</li>
+            <li>Hermite polynomials</li>
+            <li>Laguerre polynomials</li>
+        </ul>
+    </div>
+    
+    <div class="example">
+        <h3>Minimal Polynomials</h3>
+        <p>For a given element α in a field extension, the minimal polynomial is the monic polynomial of least degree with coefficients in the base field for which α is a root.</p>
+    </div>
+    
+    <h2>Multivariate Polynomials</h2>
+    <p>Polynomials can have more than one variable. The general form is:</p>
+    <div class="math-box">
+        <span class="formula">P(x₁, x₂, ..., xₙ) = ∑ c<sub>i₁i₂...iₙ</sub>x₁<sup>i₁</sup>x₂<sup>i₂</sup>...xₙ<sup>iₙ</sup></span>
+    </div>
+    <p>The degree is the maximum sum of exponents in any term.</p>
+</section>
+
+<section id="operations">
+    <h1>Operations on Polynomials</h1>
+    
+    <h2>Basic Arithmetic Operations</h2>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="openTab(event, 'addition')">Addition</div>
+        <div class="tab" onclick="openTab(event, 'subtraction')">Subtraction</div>
+        <div class="tab" onclick="openTab(event, 'multiplication')">Multiplication</div>
+        <div class="tab" onclick="openTab(event, 'division')">Division</div>
+    </div>
+    
+    <div id="addition" class="tab-content active">
+        <h3>Polynomial Addition</h3>
+        <p>To add two polynomials, combine like terms (terms with the same degree).</p>
+        <div class="code-example">
+            <code>(3x³ + 2x² - 5x + 7) + (x³ - 4x² + x - 2) = (3+1)x³ + (2-4)x² + (-5+1)x + (7-2) = 4x³ - 2x² - 4x + 5</code>
+        </div>
+        <p><strong>Properties:</strong></p>
+        <ul>
+            <li>Commutative: P + Q = Q + P</li>
+            <li>Associative: (P + Q) + R = P + (Q + R)</li>
+            <li>Additive identity: The zero polynomial</li>
+            <li>Additive inverse: For P(x), -P(x) is its inverse</li>
+        </ul>
+    </div>
+    
+    <div id="subtraction" class="tab-content">
+        <h3>Polynomial Subtraction</h3>
+        <p>Subtract corresponding coefficients of like terms.</p>
+        <div class="code-example">
+            <code>(5x² + 3x - 2) - (2x² - x + 4) = (5-2)x² + (3-(-1))x + (-2-4) = 3x² + 4x - 6</code>
+        </div>
+    </div>
+    
+    <div id="multiplication" class="tab-content">
+        <h3>Polynomial Multiplication</h3>
+        <p>Multiply each term of the first polynomial by each term of the second polynomial, then combine like terms.</p>
+        <div class="code-example">
+            <code>(x + 2)(x² - 3x + 1) = x(x²) + x(-3x) + x(1) + 2(x²) + 2(-3x) + 2(1) = x³ - 3x² + x + 2x² - 6x + 2 = x³ - x² - 5x + 2</code>
+        </div>
+        <p><strong>Properties:</strong></p>
+        <ul>
+            <li>Commutative: P × Q = Q × P</li>
+            <li>Associative: (P × Q) × R = P × (Q × R)</li>
+            <li>Distributive over addition: P × (Q + R) = P × Q + P × R</li>
+            <li>Multiplicative identity: The constant polynomial 1</li>
+        </ul>
+        <p><strong>Degree of product:</strong> deg(P × Q) = deg(P) + deg(Q)</p>
+    </div>
+    
+    <div id="division" class="tab-content">
+        <h3>Polynomial Division</h3>
+        <p>For polynomials P (dividend) and D (divisor) with D ≠ 0, there exist unique polynomials Q (quotient) and R (remainder) such that:</p>
+        <div class="math-box">
+            <span class="formula">P = D × Q + R</span>
+        </div>
+        <p>where deg(R) < deg(D). This is called the <strong>Division Algorithm</strong> for polynomials.</p>
+        
+        <h4>Long Division Example</h4>
+        <p>Divide x³ - 2x² - 4 by x - 3:</p>
+        <div class="code-example">
+            1. Divide leading terms: x³ ÷ x = x²<br>
+            2. Multiply divisor by x²: x²(x - 3) = x³ - 3x²<br>
+            3. Subtract from dividend: (x³ - 2x²) - (x³ - 3x²) = x²<br>
+            4. Bring down next term: x² - 4<br>
+            5. Repeat: x² ÷ x = x<br>
+            6. Multiply: x(x - 3) = x² - 3x<br>
+            7. Subtract: (x² - 4) - (x² - 3x) = 3x - 4<br>
+            8. Final division: 3x ÷ x = 3<br>
+            9. Multiply: 3(x - 3) = 3x - 9<br>
+            10. Subtract: (3x - 4) - (3x - 9) = 5<br>
+            Result: x² + x + 3 with remainder 5
+        </div>
+        
+        <h4>Synthetic Division</h4>
+        <p>A shortcut method for dividing by linear factors (x - c):</p>
+        <div class="code-example">
+            Divide x³ - 6x² + 11x - 6 by x - 2:<br>
+            2 | 1  -6  11  -6<br>
+              |     2  -8    6<br>
+              -------------<br>
+                1  -4   3   0<br>
+            Result: x² - 4x + 3
+        </div>
+    </div>
+    
+    <h2>Composition of Polynomials</h2>
+    <p>The composition of two polynomials P and Q is P(Q(x)), denoted (P ∘ Q)(x).</p>
+    <div class="code-example">
+        If P(x) = x² + 1 and Q(x) = 2x - 3, then:<br>
+        (P ∘ Q)(x) = P(Q(x)) = (2x - 3)² + 1 = 4x² - 12x + 9 + 1 = 4x² - 12x + 10
+    </div>
+    
+    <h2>Greatest Common Divisor (GCD)</h2>
+    <p>The GCD of two polynomials is the polynomial of highest degree that divides both. Computed using the Euclidean algorithm.</p>
+    <div class="algorithm">
+        <h3>Euclidean Algorithm for Polynomials</h3>
+        <p>Given two polynomials A and B with deg(A) ≥ deg(B):</p>
+        <ol>
+            <li>Divide A by B to get remainder R</li>
+            <li>Replace A with B and B with R</li>
+            <li>Repeat until R = 0</li>
+            <li>The last non-zero remainder is the GCD</li>
+        </ol>
+        <div class="code-example">
+            Find GCD of x³ - 2x² - x + 2 and x² - 1:<br>
+            1. x³ - 2x² - x + 2 = (x - 2)(x² - 1) + (-x)<br>
+            2. x² - 1 = (-x)(-x) + (-1)<br>
+            3. -x = (-1)(x) + 0<br>
+            GCD is -1 (or equivalently, 1)
+        </div>
+    </div>
+</section>
+
+<section id="factorization">
+    <h1>Factorization of Polynomials</h1>
+    
+    <p>Factorization is the process of expressing a polynomial as a product of lower-degree polynomials. The complete factorization depends on the coefficient field.</p>
+    
+    <div class="theorem">
+        <h3>Unique Factorization Theorem</h3>
+        <p>Every non-constant polynomial with coefficients in a field can be factored into a product of irreducible polynomials over that field, and this factorization is unique up to order and multiplication by constants.</p>
+    </div>
+    
+    <h2>Factorization Techniques</h2>
+    
+    <div class="example">
+        <h3>Common Factor</h3>
+        <div class="code-example">
+            <code>6x³y² - 9x²y⁴ + 12x⁴y = 3x²y(2xy - 3y³ + 4x²)</code>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h3>Grouping</h3>
+        <div class="code-example">
+            <code>x³ + x² + x + 1 = x²(x + 1) + 1(x + 1) = (x² + 1)(x + 1)</code>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h3>Difference of Squares</h3>
+        <div class="code-example">
+            <code>a² - b² = (a + b)(a - b)</code><br>
+            <code>9x² - 16 = (3x + 4)(3x - 4)</code>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h3>Sum and Difference of Cubes</h3>
+        <div class="code-example">
+            <code>a³ + b³ = (a + b)(a² - ab + b²)</code><br>
+            <code>a³ - b³ = (a - b)(a² + ab + b²)</code><br>
+            <code>8x³ - 27 = (2x - 3)(4x² + 6x + 9)</code>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h3>Perfect Square Trinomials</h3>
+        <div class="code-example">
+            <code>a² + 2ab + b² = (a + b)²</code><br>
+            <code>a² - 2ab + b² = (a - b)²</code><br>
+            <code>x² + 6x + 9 = (x + 3)²</code>
+        </div>
+    </div>
+    
+    <div class="example">
+        <h3>Quadratic Trinomials</h3>
+        <p>For ax² + bx + c, find two numbers m and n such that m + n = b and m × n = a × c.</p>
+        <div class="code-example">
+            <code>2x² + 7x + 3</code><br>
+            Need two numbers that multiply to 6 (2×3) and add to 7 → 6 and 1<br>
+            <code>2x² + 6x + x + 3 = 2x(x + 3) + 1(x + 3) = (2x + 1)(x + 3)</code>
+        </div>
+    </div>
+    
+    <h2>Advanced Factorization Methods</h2>
+    
+    <div class="algorithm">
+        <h3>Rational Root Theorem</h3>
+        <p>If a polynomial P(x) = a<sub>n</sub>x<sup>n</sup> + ... + a<sub>0</sub> has integer coefficients, then any rational root p/q satisfies:</p>
+        <ul>
+            <li>p divides a<sub>0</sub></li>
+            <li>q divides a<sub>n</sub></li>
+        </ul>
+        <div class="code-example">
+            Possible rational roots of 2x³ - 5x² - 4x + 3:<br>
+            Factors of 3: ±1, ±3<br>
+            Factors of 2: ±1, ±2<br>
+            Possible roots: ±1, ±3, ±1/2, ±3/2<br>
+            Testing shows x=3 is a root, so (x-3) is a factor
+        </div>
+    </div>
+    
+    <div class="algorithm">
+        <h3>Factoring by Substitution</h3>
+        <p>For complex polynomials, substitution can simplify the expression.</p>
+        <div class="code-example">
+            <code>x⁴ + x² + 1</code><br>
+            Let y = x²: y² + y + 1<br>
+            This doesn't factor easily, but:<br>
+            <code>x⁴ + x² + 1 = (x⁴ + 2x² + 1) - x² = (x² + 1)² - x² = (x² + x + 1)(x² - x + 1)</code>
+        </div>
+    </div>
+    
+    <div class="algorithm">
+        <h3>Factoring Over Complex Numbers</h3>
+        <p>Every polynomial of degree n factors into n linear factors over ℂ.</p>
+        <div class="code-example">
+            <code>x² + 1 = (x + i)(x - i)</code>
+        </div>
+    </div>
+    
+    <h2>Irreducibility Tests</h2>
+    
+    <div class="theorem">
+        <h3>Eisenstein's Criterion</h3>
+        <p>Let P(x) = a<sub>n</sub>x<sup>n</sup> + ... + a<sub>0</sub> be a polynomial with integer coefficients. If there exists a prime p such that:</p>
+        <ol>
+            <li>p divides all a<sub>i</sub> for i ≠ n</li>
+            <li>p does not divide a<sub>n</sub></li>
+            <li>p² does not divide a<sub>0</sub></li>
+        </ol>
+        <p>then P is irreducible over the rationals.</p>
+        <div class="code-example">
+            <code>x⁴ + 6x² + 12x + 6</code> is irreducible by Eisenstein with p=3
+        </div>
+    </div>
+</section>
+
+<section id="roots">
+    <h1>Roots of Polynomial Functions</h1>
+    
+    <p>A root (or zero) of a polynomial P(x) is a value r such that P(r) = 0. The Fundamental Theorem of Algebra guarantees that every non-constant polynomial has at least one complex root.</p>
+    
+    <h2>Finding Roots</h2>
+    
+    <div class="example">
+        <h3>Linear Polynomials</h3>
+        <p>For P(x) = ax + b, the root is x = -b/a.</p>
+    </div>
+    
+    <div class="example">
+        <h3>Quadratic Polynomials</h3>
+        <p>For P(x) = ax² + bx + c, use the quadratic formula:</p>
+        <div class="math-box">
+            <span class="formula">x = [-b ± √(b² - 4ac)] / (2a)</span>
+        </div>
+        <p>The discriminant Δ = b² - 4ac determines the nature of the roots:</p>
+        <ul>
+            <li>Δ > 0: Two distinct real roots</li>
+            <li>Δ = 0: One real double root</li>
+            <li>Δ < 0: Two complex conjugate roots</li>
+        </ul>
+    </div>
+    
+    <div class="example">
+        <h3>Cubic Polynomials</h3>
+        <p>For P(x) = ax³ + bx² + cx + d, Cardano's formula provides a solution, but in practice:</p>
+        <ol>
+            <li>Try to find a rational root using Rational Root Theorem</li>
+            <li>Factor out (x - r) using synthetic division</li>
+            <li>Solve the remaining quadratic</li>
+        </ol>
+    </div>
+    
+    <div class="example">
+        <h3>Quartic Polynomials</h3>
+        <p>There exists a general formula (Ferrari's method), but it's complex. Often:</p>
+        <ol>
+            <li>Look for factorable forms</li>
+            <li>Use substitution to reduce to cubic</li>
+            <li>Numerical methods may be practical</li>
+        </ol>
+    </div>
+    
+    <div class="example">
+        <h3>Higher-Degree Polynomials</h3>
+        <p>For degree ≥ 5, there is no general algebraic solution (Abel-Ruffini theorem). Methods include:</p>
+        <ul>
+            <li>Numerical approximation (Newton's method)</li>
+            <li>Graphical estimation</li>
+            <li>Special factorable forms</li>
+        </ul>
+    </div>
+    
+    <h2>Properties of Roots</h2>
+    
+    <div class="theorem">
+        <h3>Vieta's Formulas</h3>
+        <p>For P(x) = a<sub>n</sub>x<sup>n</sup> + ... + a<sub>0</sub> with roots r<sub>1</sub>, ..., r<sub>n</sub>:</p>
+        <ul>
+            <li>Sum of roots: r<sub>1</sub> + ... + r<sub>n</sub> = -a<sub>n-1</sub>/a<sub>n</sub></li>
+            <li>Sum of products of roots two at a time: ∑r<sub>i</sub>r<sub>j</sub> = a<sub>n-2</sub>/a<sub>n</sub></li>
+            <li>Product of roots: r<sub>1</sub>...r<sub>n</sub> = (-1)<sup>n</sup>a<sub>0</sub>/a<sub>n</sub></li>
+        </ul>
+        <div class="code-example">
+            For x³ - 6x² + 11x - 6 with roots 1, 2, 3:<br>
+            1 + 2 + 3 = 6 = -(-6)/1<br>
+            1×2 + 1×3 + 2×3 = 11 = 11/1<br>
+            1×2×3 = 6 = -(-6)/1
+        </div>
+    </div>
+    
+    <div class="theorem">
+        <h3>Complex Conjugate Root Theorem</h3>
+        <p>If a polynomial has real coefficients and a + bi is a root, then its conjugate a - bi is also a root.</p>
+    </div>
+    
+    <div class="theorem">
+        <h3>Multiplicity of Roots</h3>
+        <p>A root r has multiplicity k if (x - r)<sup>k</sup> divides the polynomial but (x - r)<sup>k+1</sup> does not.</p>
+        <div class="code-example">
+            <code>P(x) = x³ - 3x² + 3x - 1 = (x - 1)³</code> has root x=1 with multiplicity 3
+        </div>
+    </div>
+    
+    <h2>Polynomial Interpolation</h2>
+    <p>Given n+1 points (x<sub>i</sub>, y<sub>i</sub>) with distinct x<sub>i</sub>, there exists a unique polynomial of degree ≤ n that passes through all points.</p>
+    
+    <div class="algorithm">
+        <h3>Lagrange Interpolation Formula</h3>
+        <div class="math-box">
+            <span class="formula">P(x) = ∑<sub>i=0</sub><sup>n</sup> y<sub>i</sub> × L<sub>i</sub>(x)</span>
+        </div>
+        <p>where L<sub>i</sub>(x) is the Lagrange basis polynomial:</p>
+        <div class="math-box">
+            <span class="formula">L<sub>i</sub>(x) = ∏<sub>j≠i</sub> (x - x<sub>j</sub>) / (x<sub>i</sub> - x<sub>j</sub>)</span>
+        </div>
+    </div>
+</section>
+
+<section id="graphs">
+    <h1>Graphs of Polynomial Functions</h1>
+    
+    <p>The graph of a polynomial function provides valuable insight into its behavior, roots, and other properties.</p>
+    
+    <h2>Basic Characteristics</h2>
+    
+    <div class="graph-container">
+        <div class="graph-placeholder">[Graph of various polynomial functions would appear here]</div>
+    </div>
+    
+    <ul>
+        <li><strong>Continuity:</strong> Polynomial functions are continuous everywhere (no jumps or breaks)</li>
+        <li><strong>Smoothness:</strong> They are infinitely differentiable (no sharp corners)</li>
+        <li><strong>End Behavior:</strong> Determined by the leading term a<sub>n</sub>x<sup>n</sup>:
+            <ul>
+                <li>n even, a<sub>n</sub> > 0: Both ends rise to +∞</li>
+                <li>n even, a<sub>n</sub> < 0: Both ends fall to -∞</li>
+                <li>n odd, a<sub>n</sub> > 0: Falls to -∞ as x → -∞, rises to +∞ as x → +∞</li>
+                <li>n odd, a<sub>n</sub> < 0: Rises to +∞ as x → -∞, falls to -∞ as x → +∞</li>
+            </ul>
+        </li>
+    </ul>
+    
+    <h2>Turning Points</h2>
+    <p>A polynomial of degree n has at most n-1 turning points (local maxima or minima).</p>
+    
+    <div class="example">
+        <h3>Finding Extrema</h3>
+        <ol>
+            <li>Find the derivative P'(x)</li>
+            <li>Solve P'(x) = 0 to find critical points</li>
+            <li>Use second derivative test or sign analysis to classify:
+                <ul>
+                    <li>P''(c) > 0: Local minimum at x=c</li>
+                    <li>P''(c) < 0: Local maximum at x=c</li>
+                    <li>P''(c) = 0: Test fails (may be inflection point)</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+    
+    <h2>Graphing Procedure</h2>
+    <ol>
+        <li>Determine end behavior from leading term</li>
+        <li>Find y-intercept (P(0))</li>
+        <li>Find x-intercepts (roots)</li>
+        <li>Determine multiplicity of roots:
+            <ul>
+                <li>Odd multiplicity: Graph crosses x-axis</li>
+                <li>Even multiplicity: Graph touches x-axis and turns around</li>
+            </ul>
+        </li>
+        <li>Find turning points (solve P'(x) = 0)</li>
+        <li>Plot additional points if needed</li>
+        <li>Sketch the curve</li>
+    </ol>
+    
+    <h2>Special Polynomial Graphs</h2>
+    
+    <div class="example">
+        <h3>Power Functions</h3>
+        <p>f(x) = x<sup>n</sup> have characteristic shapes:</p>
+        <ul>
+            <li>n even: Symmetric about y-axis (even function)</li>
+            <li>n odd: Symmetric about origin (odd function)</li>
+        </ul>
+    </div>
+    
+    <div class="example">
+        <h3>Bernstein Polynomials</h3>
+        <p>Used in Bézier curves and computer graphics:</p>
+        <div class="math-box">
+            <span class="formula">B<sub>i,n</sub>(x) = C(n,i) x<sup>i</sup> (1-x)<sup>n-i</sup></span>
+        </div>
+    </div>
+</section>
+
+<section id="calculus">
+    <h1>Calculus with Polynomial Functions</h1>
+    
+    <h2>Differentiation</h2>
+    <p>The derivative of a polynomial is found using the power rule:</p>
+    <div class="math-box">
+        <span class="formula">d/dx [a<sub>n</sub>x<sup>n</sup>] = n a<sub>n</sub> x<sup>n-1</sup></span>
+    </div>
+    
+    <div class="example">
+        <h3>Example</h3>
+        <div class="code-example">
+            <code>f(x) = 3x⁴ - 2x³ + 5x - 7</code><br>
+            <code>f'(x) = 12x³ - 6x² + 5</code><br>
+            <code>f''(x) = 36x² - 12x</code><br>
+            <code>f'''(x) = 72x - 12</code><br>
+            <code>f⁽⁴⁾(x) = 72</code><br>
+            Higher derivatives are 0
+        </div>
+    </div>
+    
+    <h2>Integration</h2>
+    <p>The integral of a polynomial is found by reversing the power rule:</p>
+    <div class="math-box">
+        <span class="formula">∫ a<sub>n</sub>x<sup>n</sup> dx = a<sub>n</sub>x<sup>n+1</sup>/(n+1) + C (for n ≠ -1)</span>
+    </div>
+    
+    <div class="example">
+        <h3>Example</h3>
+        <div class="code-example">
+            <code>∫ (2x³ - 4x² + 3x - 5) dx = (1/2)x⁴ - (4/3)x³ + (3/2)x² - 5x + C</code>
+        </div>
+    </div>
+    
+    <h2>Taylor Polynomials</h2>
+    <p>Taylor polynomials provide polynomial approximations to functions near a point.</p>
+    <div class="math-box">
+        <span class="formula">P<sub>n</sub>(x) = ∑<sub>k=0</sub><sup>n</sup> [f⁽ᵏ⁾(a)/k!] (x - a)<sup>k</sup></span>
+    </div>
+    
+    <div class="example">
+        <h3>Maclaurin Series for eˣ</h3>
+        <p>At a = 0, since all derivatives of eˣ are eˣ and e⁰ = 1:</p>
+        <div class="math-box">
+            <span class="formula">eˣ ≈ 1 + x + x²/2! + x³/3! + ... + xⁿ/n!</span>
+        </div>
+    </div>
+</section>
+
+<section id="applications">
+    <h1>Applications of Polynomial Functions</h1>
+    
+    <h2>Physics and Engineering</h2>
+    <ul>
+        <li><strong>Projectile motion:</strong> Height as quadratic function of time</li>
+        <li><strong>Spring systems:</strong> Potential energy as quadratic function of displacement</li>
+        <li><strong>Electronics:</strong> Voltage-current relationships in nonlinear components</li>
+    </ul>
+    
+    <h2>Economics and Finance</h2>
+    <ul>
+        <li><strong>Cost functions:</strong> Often modeled as polynomials</li>
+        <li><strong>Option pricing:</strong> Polynomial approximations used in models</li>
+        <li><strong>Economic growth:</strong> Polynomial trends in time series data</li>
+    </ul>
+    
+    <h2>Computer Science</h2>
+    <ul>
+        <li><strong>Computer graphics:</strong> Bézier curves for font rendering and animation</li>
+        <li><strong>Error-correcting codes:</strong> Reed-Solomon codes use polynomial algebra</li>
+        <li><strong>Cryptography:</strong> Polynomial operations in some encryption schemes</li>
+    </ul>
+    
+    <h2>Numerical Analysis</h2>
+    <ul>
+        <li><strong>Polynomial interpolation:</strong> Constructing functions through given points</li>
+        <li><strong>Numerical integration:</strong> Newton-Cotes formulas use polynomial approximation</li>
+        <li><strong>Finite element methods:</strong> Polynomial basis functions for PDE solutions</li>
+    </ul>
+    
+    <h2>Advanced Mathematics</h2>
+    <ul>
+        <li><strong>Algebraic geometry:</strong> Study of varieties defined by polynomials</li>
+        <li><strong>Knot theory:</strong> Polynomial invariants to distinguish knots</li>
+        <li><strong>Approximation theory:</strong> Weierstrass approximation theorem</li>
+    </ul>
+</section>
+
+<footer>
+    &copy; 2025 Yoseph Feyisa Wegi | All Rights Reserved. | This comprehensive guide covers polynomial functions from basic concepts to advanced applications.
+</footer>
+
+<script>
+    function openTab(evt, tabName) {
+        // Hide all tab contents
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove("active");
+        }
+        
+        // Remove active class from all tabs
+        const tabs = document.getElementsByClassName("tab");
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].classList.remove("active");
+        }
+        
+        // Show the current tab and mark button as active
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+</script>
+
+</body>
+</html>
